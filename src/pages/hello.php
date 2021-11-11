@@ -7,6 +7,6 @@
     <title>Greet!</title>
 </head>
 <body>
-    Hello <?= htmlspecialchars($request->get('name', 'World'), ENT_QUOTES, 'UTF-8') ?>
+    Hello <?= htmlspecialchars($name ?? 'World', ENT_QUOTES, 'UTF-8') ?>
 </body>
 </html>
