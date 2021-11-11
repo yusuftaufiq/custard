@@ -3213,7 +3213,9 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {
+        "psy/psysh": 0
+    },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": [],
