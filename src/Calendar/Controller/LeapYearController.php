@@ -8,7 +8,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 class LeapYearController
 {
-    public function index(Request $request, $year)
+    public function index(Request $request, ?int $year)
     {
         $leapYear = new LeapYear();
         if ($leapYear->isLeapYear($year)) {

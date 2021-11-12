@@ -4,7 +4,7 @@ namespace Calendar\Model;
 
 class LeapYear
 {
-    public function isLeapYear($year = null)
+    public function isLeapYear(int $year = null)
     {
         if (null === $year) {
             $year = date('Y');
