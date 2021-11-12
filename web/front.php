@@ -1,7 +1,7 @@
 <?php
 
 // xdebug_break();
-// php -dxdebug.mode=debug -dxdebug.start_with_request=yes -S localhost:8080 web/front.php
+// php -d xdebug.mode=debug -d xdebug.start_with_request=yes -S localhost:8080 web/front.php
 // eval(\Psy\sh());
 
 require_once __DIR__ . '/../vendor/autoload.php';
