@@ -1,5 +1,8 @@
 <?php
 
+// xdebug_break();
+// eval(\Psy\sh());
+
 namespace Simplex\Tests;
 
 use PHPUnit\Framework\TestCase;

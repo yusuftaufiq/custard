@@ -4,6 +4,10 @@
             "": "src/"
         }
     },
+    "scripts": {
+        "start": "@php -S localhost:8080 web/front.php",
+        "start-with-xdebug": "@php -d xdebug.mode=debug -d xdebug.start_with_request=yes -S localhost:8080 web/front.php"
+    },
     "require-dev": {
         "phpunit/phpunit": "^9.5"
     },

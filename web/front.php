@@ -1,9 +1,5 @@
 <?php
 
-// xdebug_break();
-// php -d xdebug.mode=debug -d xdebug.start_with_request=yes -S localhost:8080 web/front.php
-// eval(\Psy\sh());
-
 require_once __DIR__ . '/../vendor/autoload.php';
 
 use Symfony\Component\HttpFoundation\Request;
@@ -16,6 +12,8 @@ $routes = include __DIR__ . '/../src/app.php';
 
 $context = new RequestContext();
 $matcher = new UrlMatcher($routes, $context);
+
+xdebug_break();
 
 $controllerResolver = new ControllerResolver();
 $argumentResolver = new ArgumentResolver();
