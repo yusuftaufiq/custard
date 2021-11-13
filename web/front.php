@@ -13,8 +13,6 @@ $routes = include __DIR__ . '/../src/app.php';
 $context = new RequestContext();
 $matcher = new UrlMatcher($routes, $context);
 
-xdebug_break();
-
 $controllerResolver = new ControllerResolver();
 $argumentResolver = new ArgumentResolver();
 
