@@ -5,8 +5,14 @@
         }
     },
     "scripts": {
-        "start": "@php -S localhost:8080 web/front.php",
-        "start-with-xdebug": "@php -d xdebug.mode=debug -d xdebug.start_with_request=yes -S localhost:8080 web/front.php",
+        "start": [
+            "Composer\\Config::disableProcessTimeout",
+            "@php -S localhost:8080 web/front.php"
+        ],
+        "start-with-xdebug": [
+            "Composer\\Config::disableProcessTimeout",
+            "@php -d xdebug.mode=debug -d xdebug.start_with_request=yes -S localhost:8080 web/front.php"
+        ],
         "test-coverage": "@php -d xdebug.mode=coverage ./vendor/bin/phpunit --coverage-html=cov/"
     },
     "require-dev": {
