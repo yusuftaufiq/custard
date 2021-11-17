@@ -5,14 +5,15 @@
 
 namespace Simplex\Tests;
 
-use PHPUnit\Framework\TestCase;
 use Simplex\Framework;
+use Calendar\Controller\LeapYearController;
+use PHPUnit\Framework\TestCase;
+use Symfony\Component\EventDispatcher\{EventDispatcher, EventDispatcherInterface};
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Controller\{ArgumentResolverInterface, ControllerResolverInterface};
+use Symfony\Component\HttpKernel\Controller\{ArgumentResolverInterface, ArgumentResolver};
+use Symfony\Component\HttpKernel\Controller\{ControllerResolver, ControllerResolverInterface};
 use Symfony\Component\Routing;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
-use Calendar\Controller\LeapYearController;
-use Symfony\Component\HttpKernel\Controller\{ArgumentResolver, ControllerResolver};
 
 class FrameworkTest extends TestCase
 {
@@ -48,14 +49,17 @@ class FrameworkTest extends TestCase
                 'year' => '2000',
                 '_controller' => [new LeapYearController(), 'index'],
             ]));
+
         $matcher
             ->expects($this->once())
             ->method('getContext')
             ->will($this->returnValue($this->createMock(Routing\RequestContext::class)));
+
+        $dispatcher = new EventDispatcher();
         $controllerResolver = new ControllerResolver();
         $argumentResolver = new ArgumentResolver();
 
-        $framework = new Framework($matcher, $controllerResolver, $argumentResolver);
+        $framework = new Framework($dispatcher, $matcher, $controllerResolver, $argumentResolver);
 
         $response = $framework->handle(new Request());
 
@@ -73,13 +77,16 @@ class FrameworkTest extends TestCase
             ->expects($this->once())
             ->method('match')
             ->will($this->throwException($exception));
+
         $matcher
             ->expects($this->once())
             ->method('getContext')
             ->will($this->returnValue($this->createMock(Routing\RequestContext::class)));
+
+        $dispatcher = $this->createMock(EventDispatcherInterface::class);
         $controllerResolver = $this->createMock(ControllerResolverInterface::class);
         $argumentResolver = $this->createMock(ArgumentResolverInterface::class);
 
-        return new Framework($matcher, $controllerResolver, $argumentResolver);
+        return new Framework($dispatcher, $matcher, $controllerResolver, $argumentResolver);
     }
 }
