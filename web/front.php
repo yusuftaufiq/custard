@@ -6,6 +6,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\{RequestContext, Matcher\UrlMatcher};
 use Symfony\Component\HttpKernel\Controller\{ArgumentResolver, ControllerResolver};
 use Symfony\Component\EventDispatcher\EventDispatcher;
+use Symfony\Component\HttpKernel;
 use Simplex\Framework;
 
 $request = Request::createFromGlobals();
@@ -21,7 +22,10 @@ $dispatcher->addSubscriber(new Simplex\GoogleListener());
 $controllerResolver = new ControllerResolver();
 $argumentResolver = new ArgumentResolver();
 
-$framework = new Framework($dispatcher, $matcher, $controllerResolver, $argumentResolver);
-$response = $framework->handle($request);
+$framework = new HttpKernel\HttpCache\HttpCache(
+    new Framework($dispatcher, $matcher, $controllerResolver, $argumentResolver),
+    new HttpKernel\HttpCache\Store(__DIR__ . '/../cache'),
+);
 
+$response = $framework->handle($request);
 $response->send();
