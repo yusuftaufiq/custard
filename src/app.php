@@ -8,7 +8,7 @@ $routes = new RouteCollection();
 $routes->add('leap_year', new Route(
     path: '/is_leap_year/{year}',
     defaults: [
-        'year' => null,
+        'year' => date('Y'),
         '_controller' => [LeapYearController::class, 'index'],
     ],
     requirements: [
