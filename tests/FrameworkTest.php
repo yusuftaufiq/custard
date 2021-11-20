@@ -33,26 +33,6 @@ class FrameworkTest extends TestCase
 
     public function testControllerResponse()
     {
-        // $routes = $this->createMock(RouteCollection::class);
-
-        // $isLapYearRoute = new Route(
-        //     path: '/is_leap_year/{year}',
-        //     defaults: [
-        //         'year' => date('Y'),
-        //         '_controller' => [LeapYearController::class, 'index'],
-        //     ],
-        //     requirements: [
-        //         'year' => '\d+|\0',
-        //     ],
-        // );
-
-        // $routes
-        //     ->expects($this->once())
-        //     ->method('getIterator')
-        //     ->will($this->returnValue(new \ArrayIterator([
-        //         $isLapYearRoute,
-        //     ])));
-
         $routes = include __DIR__ . '/../src/app.php';
 
         $framework = new Framework($routes);
