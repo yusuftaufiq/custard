@@ -1,0 +1,8 @@
+parameters:
+	level: max
+	paths:
+		- src
+		- web
+		- tests
+	# editorUrl: 'vscode://file/%%file%%:%%line%%'
+	editorUrl: '%%file%%:%%line%%'
