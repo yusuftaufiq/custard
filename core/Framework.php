@@ -24,15 +24,14 @@ class Framework extends HttpKernel
 
         $dispatcher = new EventDispatcher();
 
-        $dispatcher->addSubscriber(new Listeners\ContentLengthListener());
-        $dispatcher->addSubscriber(new Listeners\GoogleListener());
-
         $dispatcher->addSubscriber(new ErrorListener(fn (FlattenException $exception): Response => (
             new Response("Something went wrong! ({$exception->getMessage()})", $exception->getStatusCode())
         )));
         $dispatcher->addSubscriber(new RouterListener($matcher, $requestStack));
-        $dispatcher->addSubscriber(new ResponseListener('UTF-8'));
-        $dispatcher->addSubscriber(new Listeners\StringResponseListener());
+        // $dispatcher->addSubscriber(new ResponseListener('UTF-8'));
+
+        $appListenersHandler = new Listeners\Handler();
+        $appListenersHandler->register($dispatcher);
 
         parent::__construct($dispatcher, $controllerResolver, $requestStack, $argumentResolver);
     }
@@ -44,8 +43,8 @@ class Framework extends HttpKernel
     ): Response {
         $response = parent::handle($request, $type, $catch);
 
-        // dispatch a response event
-        $this->dispatcher->dispatch(new Events\ResponseEvent($response, $request), 'response');
+        $appEventsHandler = new Events\Handler();
+        $appEventsHandler->register($this->dispatcher, $response, $request);
 
         return $response;
     }
