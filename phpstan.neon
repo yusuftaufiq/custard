@@ -1,8 +1,10 @@
 parameters:
 	level: max
 	paths:
-		- src
-		- web
+		- app
+		- core
+		- database
+		- routes
 		- tests
-	# editorUrl: 'vscode://file/%%file%%:%%line%%'
+		- web
 	editorUrl: '%%file%%:%%line%%'
