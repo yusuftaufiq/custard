@@ -10,22 +10,22 @@
             "Composer\\Config::disableProcessTimeout",
             "@php -S localhost:8080 web/front.php"
         ],
-        "start-with-xdebug": [
-            "Composer\\Config::disableProcessTimeout",
-            "@php -d xdebug.mode=debug -d xdebug.start_with_request=yes -S localhost:8080 web/front.php"
-        ],
+        "migrate": "./vendor/bin/phinx migrate",
+        "test": "./vendor/bin/phpunit",
         "test-coverage": "@php -d xdebug.mode=coverage ./vendor/bin/phpunit --coverage-html=cov/"
     },
     "require-dev": {
         "psy/psysh": "@stable",
         "phpunit/phpunit": "^9.5",
-        "symfony/var-dumper": "^5.3"
+        "symfony/var-dumper": "^5.3",
+        "phpstan/phpstan": "^1.2"
     },
     "require": {
         "symfony/http-foundation": "^5.3",
         "symfony/routing": "^5.3",
         "symfony/http-kernel": "^5.3",
         "symfony/event-dispatcher": "^5.3",
-        "phpstan/phpstan": "^1.2"
+        "robmorgan/phinx": "^0.12.9",
+        "symfony/yaml": "^6.0"
     }
 }
