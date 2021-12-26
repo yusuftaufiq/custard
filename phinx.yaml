@@ -4,14 +4,14 @@ paths:
 
 environments:
     default_migration_table: migrations
-    default_environment: development
+    default_environment: production
     production:
         adapter: mysql
         host: '%%PHINX_DB_HOST%%'
         name: '%%PHINX_DB_NAME%%'
         user: '%%PHINX_DB_USERNAME%%'
         pass: '%%PHINX_DB_PASSWORD%%'
-        port: '%%PHINX_DB_PORT%%'
+        port: 3306
         charset: utf8
 
 version_order: creation
