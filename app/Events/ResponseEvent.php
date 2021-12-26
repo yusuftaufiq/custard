@@ -1,6 +1,6 @@
 <?php
 
-namespace Simplex;
+namespace App\Events;
 
 use Symfony\Component\HttpFoundation\{Request, Response};
 use Symfony\Contracts\EventDispatcher\Event;
@@ -13,12 +13,12 @@ class ResponseEvent extends Event
     ) {
     }
 
-    public function getResponse()
+    public function getResponse(): Response
     {
         return $this->response;
     }
 
-    public function getRequest()
+    public function getRequest(): Request
     {
         return $this->request;
     }

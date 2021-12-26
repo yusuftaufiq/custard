@@ -1,8 +1,8 @@
 <?php
 
-namespace Calendar\Controller;
+namespace App\Http\Calendar\Controller;
 
-use Calendar\Model\LeapYear;
+use App\Http\Calendar\Model\LeapYear;
 use Symfony\Component\HttpFoundation\{Request, Response};
 
 class LeapYearController

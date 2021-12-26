@@ -1,7 +1,8 @@
 <?php
 
-namespace Simplex;
+namespace Core;
 
+use App\{Events, Listeners};
 use Symfony\Component\ErrorHandler\Exception\FlattenException;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\{Request, Response, RequestStack};
@@ -23,15 +24,15 @@ class Framework extends HttpKernel
 
         $dispatcher = new EventDispatcher();
 
-        $dispatcher->addSubscriber(new ContentLengthListener());
-        $dispatcher->addSubscriber(new GoogleListener());
+        $dispatcher->addSubscriber(new Listeners\ContentLengthListener());
+        $dispatcher->addSubscriber(new Listeners\GoogleListener());
 
         $dispatcher->addSubscriber(new ErrorListener(fn (FlattenException $exception): Response => (
             new Response("Something went wrong! ({$exception->getMessage()})", $exception->getStatusCode())
         )));
         $dispatcher->addSubscriber(new RouterListener($matcher, $requestStack));
         $dispatcher->addSubscriber(new ResponseListener('UTF-8'));
-        $dispatcher->addSubscriber(new StringResponseListener());
+        $dispatcher->addSubscriber(new Listeners\StringResponseListener());
 
         parent::__construct($dispatcher, $controllerResolver, $requestStack, $argumentResolver);
     }
@@ -44,7 +45,7 @@ class Framework extends HttpKernel
         $response = parent::handle($request, $type, $catch);
 
         // dispatch a response event
-        $this->dispatcher->dispatch(new ResponseEvent($response, $request), 'response');
+        $this->dispatcher->dispatch(new Events\ResponseEvent($response, $request), 'response');
 
         return $response;
     }

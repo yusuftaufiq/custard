@@ -1,6 +1,6 @@
 <?php
 
-namespace Simplex;
+namespace App\Listeners;
 
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Response;
@@ -8,7 +8,7 @@ use Symfony\Component\HttpKernel\Event\ViewEvent;
 
 class StringResponseListener implements EventSubscriberInterface
 {
-    public function onView(ViewEvent $event)
+    public function onView(ViewEvent $event): void
     {
         $response = $event->getControllerResult();
 
@@ -17,7 +17,7 @@ class StringResponseListener implements EventSubscriberInterface
         }
     }
 
-    public static function getSubscribedEvents()
+    public static function getSubscribedEvents(): array
     {
         return ['kernel.view' => 'onView'];
     }

@@ -3,9 +3,9 @@
 // xdebug_break();
 // eval(\Psy\sh());
 
-namespace Simplex\Tests;
+namespace App\Tests;
 
-use Simplex\Framework;
+use Core\Framework;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\RouteCollection;
@@ -33,7 +33,7 @@ class FrameworkTest extends TestCase
 
     public function testControllerResponse()
     {
-        $routes = include __DIR__ . '/../src/app.php';
+        $routes = include __DIR__ . '/../routes/api.php';
 
         $framework = new Framework($routes);
 
