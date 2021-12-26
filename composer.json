@@ -6,11 +6,13 @@
         }
     },
     "scripts": {
+        "analyse": "./vendor/bin/phpstan analyse -c phpstan.neon",
         "start": [
             "Composer\\Config::disableProcessTimeout",
             "@php -S localhost:8080 web/front.php"
         ],
         "migrate": "./vendor/bin/phinx migrate",
+        "seed": "./vendor/bin/phinx seed:run",
         "test": "./vendor/bin/phpunit",
         "test-coverage": "@php -d xdebug.mode=coverage ./vendor/bin/phpunit --coverage-html=cov/"
     },
@@ -18,7 +20,8 @@
         "psy/psysh": "@stable",
         "phpunit/phpunit": "^9.5",
         "symfony/var-dumper": "^5.3",
-        "phpstan/phpstan": "^1.2"
+        "phpstan/phpstan": "^1.2",
+        "fakerphp/faker": "^1.17"
     },
     "require": {
         "symfony/http-foundation": "^5.3",
