@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Core;
 
 use App\{Events, Listeners};
@@ -11,7 +13,7 @@ use Symfony\Component\HttpKernel\EventListener\{ErrorListener, ResponseListener,
 use Symfony\Component\HttpKernel\{HttpKernel, HttpKernelInterface};
 use Symfony\Component\Routing\{Matcher\UrlMatcher, RequestContext, RouteCollection};
 
-class Framework extends HttpKernel
+final class Framework extends HttpKernel
 {
     public function __construct(RouteCollection $routes)
     {
