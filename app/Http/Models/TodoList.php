@@ -11,6 +11,8 @@ final class TodoList extends AbstractQueryBuilderRepository
 {
     protected string $table = 'todo_lists';
 
+    protected bool $softDeletes = true;
+
     public array $priority = [
         'very-low',
         'low',

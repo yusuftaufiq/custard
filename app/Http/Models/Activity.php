@@ -11,6 +11,8 @@ final class Activity extends AbstractQueryBuilderRepository
 {
     protected string $table = 'activities';
 
+    protected bool $softDeletes = true;
+
     final public function __construct()
     {
         $this->use(new MysqlConnection());

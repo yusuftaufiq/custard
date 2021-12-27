@@ -4,13 +4,16 @@ declare(strict_types=1);
 
 namespace Core\Database\Repositories;
 
-use Cake\Database\Query;
 use Cake\Database\Connection;
 use Core\Database\Connections\ConnectionInterface;
+use Cake\Database\Expression\QueryExpression;
+use Cake\Database\Query;
 
 class AbstractQueryBuilderRepository implements RepositoryInterface
 {
     protected string $table;
+
+    protected bool $softDeletes = false;
 
     protected Connection $connection;
 
@@ -29,6 +32,9 @@ class AbstractQueryBuilderRepository implements RepositoryInterface
         return $this->query
             ->select('*')
             ->from($this->table)
+            ->where(function (QueryExpression $expression) {
+                return $this->softDeletes ? $expression->isNull('deleted_at') : [];
+            })
             ->execute()
             ->fetchAll(\PDO::FETCH_OBJ);
     }
@@ -38,7 +44,10 @@ class AbstractQueryBuilderRepository implements RepositoryInterface
         return $this->query
             ->select('*')
             ->from($this->table)
-            ->order($this->query->newExpr('RAND()'))
+            ->where(function (QueryExpression $expression) {
+                return $this->softDeletes ? $expression->isNull('deleted_at') : [];
+            })
+            ->order($this->query->func()->rand())
             ->execute()
             ->fetch(\PDO::FETCH_OBJ);
     }
@@ -48,7 +57,10 @@ class AbstractQueryBuilderRepository implements RepositoryInterface
         return $this->query
             ->select('*')
             ->from($this->table)
-            ->where(['id' => $id])
+            ->where(function (QueryExpression $expression) {
+                return $this->softDeletes ? $expression->isNull('deleted_at') : [];
+            })
+            ->andWhere(['id' => $id])
             ->execute()
             ->fetch(\PDO::FETCH_OBJ);
     }
@@ -68,7 +80,13 @@ class AbstractQueryBuilderRepository implements RepositoryInterface
 
     public function delete(int $id): void
     {
-        $this->connection
-            ->delete($this->table, ['id' => $id]);
+        if ($this->softDeletes) {
+            $this->update($id, [
+                'deleted_at' => 'now()',
+            ]);
+        } else {
+            $this->connection
+                ->delete($this->table, ['id' => $id]);
+        }
     }
 }
