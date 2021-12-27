@@ -1,19 +1,19 @@
 <?php
 
 use Symfony\Component\Routing\{RouteCollection, Route};
-use App\Http\Calendar\Controller\LeapYearController;
+use App\Http\Controllers\ActivityController;
 
 $routes = new RouteCollection();
 
-$routes->add('leap_year', new Route(
-    path: '/is_leap_year/{year}',
-    defaults: [
-        'year' => date('Y'),
-        '_controller' => [LeapYearController::class, 'index'],
-    ],
-    requirements: [
-        'year' => '\d+|\0',
-    ],
+$routes->add('activities', new Route(
+    path: '/activity-groups',
+    defaults: ['_controller' => [ActivityController::class, 'index']],
+));
+
+$routes->add('activity', new Route(
+    path: '/activity-groups/{id}',
+    defaults: ['_controller' => [ActivityController::class, 'show']],
+    requirements: ['id' => '\d+'],
 ));
 
 return $routes;
