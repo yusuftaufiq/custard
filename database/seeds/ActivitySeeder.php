@@ -8,7 +8,7 @@ use Phinx\Seed\AbstractSeed;
 
 final class ActivitySeeder extends AbstractSeed
 {
-    public function run(): void
+    final public function run(): void
     {
         $faker = Factory::create();
 

@@ -19,7 +19,7 @@ final class MysqlConnection implements ConnectionInterface
 
     private Query $query;
 
-    public function __construct()
+    final public function __construct()
     {
         $this->configuration = new Configuration();
 
@@ -36,12 +36,12 @@ final class MysqlConnection implements ConnectionInterface
         $this->query = $this->connection->newQuery();
     }
 
-    public function getConnection(): Connection
+    final public function getConnection(): Connection
     {
         return $this->connection;
     }
 
-    public function getQueryBuilder(): Query
+    final public function getQueryBuilder(): Query
     {
         return $this->query;
     }

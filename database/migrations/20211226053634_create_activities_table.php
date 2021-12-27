@@ -6,7 +6,7 @@ use Phinx\Migration\AbstractMigration;
 
 final class CreateActivitiesTable extends AbstractMigration
 {
-    public function change(): void
+    final public function change(): void
     {
         $this->table('activities')
             ->addColumn('email', 'string', [

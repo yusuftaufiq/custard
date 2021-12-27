@@ -17,7 +17,7 @@ final class CreateTodoListsTable extends AbstractMigration
      * Remember to call "create()" or "update()" and NOT "save()" when working
      * with the Table class.
      */
-    public function change(): void
+    final public function change(): void
     {
         $this->table('todo_lists')
             ->addColumn('activity_group_id', 'integer')
