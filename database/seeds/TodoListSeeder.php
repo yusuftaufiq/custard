@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 
-use App\Http\Models\Activity;
-use App\Http\Models\TodoList;
+use App\Models\Activity;
+use App\Models\TodoList;
 use Faker\Factory;
 use Phinx\Seed\AbstractSeed;
 

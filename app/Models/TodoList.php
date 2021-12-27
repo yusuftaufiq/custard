@@ -2,16 +2,23 @@
 
 declare(strict_types=1);
 
-namespace App\Http\Models;
+namespace App\Models;
 
 use Core\Database\Connections\MysqlConnection;
 use Core\Database\Repositories\AbstractQueryBuilderRepository;
 
-final class Activity extends AbstractQueryBuilderRepository
+final class TodoList extends AbstractQueryBuilderRepository
 {
-    protected string $table = 'activities';
+    protected string $table = 'todo_lists';
 
     protected bool $softDeletes = true;
+
+    public array $priority = [
+        'very-low',
+        'low',
+        'high',
+        'very-high',
+    ];
 
     final public function __construct()
     {
