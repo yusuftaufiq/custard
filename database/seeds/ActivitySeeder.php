@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Http\Activity\Model\Activity;
+use App\Http\Models\Activity;
 use Faker\Factory;
 use Phinx\Seed\AbstractSeed;
 

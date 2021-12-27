@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Http\TodoList\Model;
+namespace App\Http\Models;
 
 use Core\Database\Connections\MysqlConnection;
 use Core\Database\Repositories\AbstractQueryBuilderRepository;
@@ -23,7 +23,7 @@ final class TodoList extends AbstractQueryBuilderRepository
         $this->use(new MysqlConnection());
     }
 
-    public static function init(...$args): self
+    final public static function init(...$args): self
     {
         return new self(...$args);
     }
