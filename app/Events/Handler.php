@@ -9,6 +9,6 @@ class Handler
 {
     public function register(EventDispatcher $dispatcher, Response $response, Request $request)
     {
-        $dispatcher->dispatch(new ResponseEvent($response, $request), 'response');
+        // $dispatcher->dispatch(new ResponseEvent($response, $request), 'response');
     }
 }

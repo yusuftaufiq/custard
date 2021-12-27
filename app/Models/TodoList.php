@@ -11,6 +11,8 @@ final class TodoList extends AbstractQueryBuilderRepository
 {
     protected string $table = 'todo_lists';
 
+    protected string $notFoundMessage = 'Todo with ID %d Not Found';
+
     protected bool $softDeletes = true;
 
     public array $priority = [

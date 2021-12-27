@@ -8,12 +8,15 @@ use Cake\Database\Connection;
 use Core\Database\Connections\ConnectionInterface;
 use Cake\Database\Expression\QueryExpression;
 use Cake\Database\Query;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class AbstractQueryBuilderRepository implements RepositoryInterface
 {
     protected string $table;
 
     protected bool $softDeletes = false;
+
+    protected string $notFoundMessage = 'Resources with id %d not found';
 
     protected Connection $connection;
 
@@ -49,12 +52,12 @@ class AbstractQueryBuilderRepository implements RepositoryInterface
             })
             ->order($this->query->func()->rand())
             ->execute()
-            ->fetch(\PDO::FETCH_OBJ);
+            ->fetch(\PDO::FETCH_OBJ) ?: null;
     }
 
-    public function find(int $id): ?object
+    public function find(int $id): object
     {
-        return $this->query
+        $result = $this->query
             ->select('*')
             ->from($this->table)
             ->where(function (QueryExpression $expression) {
@@ -63,6 +66,12 @@ class AbstractQueryBuilderRepository implements RepositoryInterface
             ->andWhere(['id' => $id])
             ->execute()
             ->fetch(\PDO::FETCH_OBJ);
+
+        if ($result === false) {
+            throw new NotFoundHttpException(sprintf($this->notFoundMessage, $id));
+        }
+
+        return $result;
     }
 
     public function create(array $values): int

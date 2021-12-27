@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Core;
 
 use App\{Events, Listeners};
-use Symfony\Component\ErrorHandler\Exception\FlattenException;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\{Request, Response, RequestStack};
 use Symfony\Component\HttpKernel\Controller\{ArgumentResolver, ControllerResolver};
@@ -26,11 +25,7 @@ final class Framework extends HttpKernel
 
         $dispatcher = new EventDispatcher();
 
-        $dispatcher->addSubscriber(new ErrorListener(fn (FlattenException $exception): Response => (
-            new Response("Something went wrong! ({$exception->getMessage()})", $exception->getStatusCode())
-        )));
         $dispatcher->addSubscriber(new RouterListener($matcher, $requestStack));
-        // $dispatcher->addSubscriber(new ResponseListener('UTF-8'));
 
         $appListenersHandler = new Listeners\Handler();
         $appListenersHandler->register($dispatcher);

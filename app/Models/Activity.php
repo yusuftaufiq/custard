@@ -11,6 +11,8 @@ final class Activity extends AbstractQueryBuilderRepository
 {
     protected string $table = 'activities';
 
+    protected string $notFoundMessage = 'Activity with ID %d Not Found';
+
     protected bool $softDeletes = true;
 
     final public function __construct()
