@@ -16,9 +16,9 @@ class Configuration
 
     public function __construct()
     {
-        $this->host = getenv('PHINX_DB_HOST');
-        $this->dbname = getenv('PHINX_DB_NAME');
-        $this->username = getenv('PHINX_DB_USERNAME');
-        $this->password = getenv('PHINX_DB_PASSWORD');
+        $this->host = getenv('PHINX_DB_HOST') ?: 'localhost';
+        $this->dbname = getenv('PHINX_DB_NAME') ?: '';
+        $this->username = getenv('PHINX_DB_USERNAME') ?: 'root';
+        $this->password = getenv('PHINX_DB_PASSWORD') ?: '';
     }
 }

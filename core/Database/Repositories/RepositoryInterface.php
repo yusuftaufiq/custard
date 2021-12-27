@@ -6,7 +6,7 @@ namespace Core\Database\Repositories;
 
 interface RepositoryInterface
 {
-    public function all(): ?array;
+    public function all(): array;
 
     public function random(): ?object;
 

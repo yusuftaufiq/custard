@@ -18,12 +18,12 @@ final class Activity extends AbstractQueryBuilderRepository
 
     final public function __construct()
     {
-        $this->use(new MysqlConnection());
+        parent::__construct(connection: new MysqlConnection());
     }
 
-    final public static function init(...$args): self
+    final public static function init(): self
     {
-        return new self(...$args);
+        return new self();
     }
 
     final public function todoLists(int $activityId): array
@@ -36,7 +36,7 @@ final class Activity extends AbstractQueryBuilderRepository
             })
             ->AndWhere(['activity_group_id' => $activityId])
             ->execute()
-            ->fetchAll(\PDO::FETCH_OBJ);
+            ->fetchAll(\PDO::FETCH_OBJ) ?: [];
 
         // $this->chains($this->all(), [
         //     'AndWhere' => ['activity_group_id' => $activityId],

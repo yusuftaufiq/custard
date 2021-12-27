@@ -24,11 +24,11 @@ final class TodoList extends AbstractQueryBuilderRepository
 
     final public function __construct()
     {
-        $this->use(new MysqlConnection());
+        parent::__construct(connection: new MysqlConnection());
     }
 
-    final public static function init(...$args): self
+    final public static function init(): self
     {
-        return new self(...$args);
+        return new self();
     }
 }

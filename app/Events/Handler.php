@@ -7,7 +7,7 @@ use Symfony\Component\HttpFoundation\{Request, Response};
 
 class Handler
 {
-    public function register(EventDispatcher $dispatcher, Response $response, Request $request)
+    public function register(EventDispatcher $dispatcher, Response $response, Request $request): void
     {
         // $dispatcher->dispatch(new ResponseEvent($response, $request), 'response');
     }

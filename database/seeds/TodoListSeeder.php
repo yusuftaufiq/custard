@@ -14,7 +14,7 @@ final class TodoListSeeder extends AbstractSeed
         $faker = Factory::create();
 
         TodoList::init()->create([
-            'activity_group_id' => Activity::init()->random()->id,
+            'activity_group_id' => Activity::init()->random()?->id,
             'title' => $faker->text(30),
             'priority ' => $faker->randomElement(TodoList::init()->priority),
         ]);

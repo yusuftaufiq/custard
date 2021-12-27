@@ -7,7 +7,7 @@ use Symfony\Component\HttpKernel\EventListener\ErrorListener;
 
 class Handler
 {
-    public function register(EventDispatcher $dispatcher)
+    public function register(EventDispatcher $dispatcher): void
     {
         $dispatcher->addSubscriber(new ErrorListener([NotFoundListener::class, 'handler']));
 

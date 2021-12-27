@@ -12,7 +12,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class AbstractQueryBuilderRepository implements RepositoryInterface
 {
-    protected string $table;
+    protected string $table = '';
 
     protected bool $softDeletes = false;
 
@@ -22,15 +22,13 @@ class AbstractQueryBuilderRepository implements RepositoryInterface
 
     protected Query $query;
 
-    public function use(ConnectionInterface $connection): self
+    public function __construct(ConnectionInterface $connection)
     {
         $this->connection = $connection->getConnection();
         $this->query = $connection->getQueryBuilder();
-
-        return $this;
     }
 
-    public function all(): ?array
+    public function all(): array
     {
         return $this->query
             ->select('*')
@@ -39,7 +37,7 @@ class AbstractQueryBuilderRepository implements RepositoryInterface
                 return $this->softDeletes ? $expression->isNull('deleted_at') : [];
             })
             ->execute()
-            ->fetchAll(\PDO::FETCH_OBJ);
+            ->fetchAll(\PDO::FETCH_OBJ) ?: [];
     }
 
     public function random(): ?object

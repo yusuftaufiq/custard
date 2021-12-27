@@ -12,7 +12,7 @@ final class ActivitySeeder extends AbstractSeed
     {
         $faker = Factory::create();
 
-        $id = Activity::init()->create([
+        Activity::init()->create([
             'email' => $faker->email(),
             'title' => $faker->text(30),
         ]);
