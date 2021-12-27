@@ -9,7 +9,7 @@
         "analyse": "./vendor/bin/phpstan analyse -c phpstan.neon",
         "start": [
             "Composer\\Config::disableProcessTimeout",
-            "@php -S localhost:8080 web/front.php"
+            "@php -S localhost:8080 web/index.php"
         ],
         "migrate": "./vendor/bin/phinx migrate",
         "seed": "./vendor/bin/phinx seed:run",
@@ -20,8 +20,8 @@
         "psy/psysh": "@stable",
         "phpunit/phpunit": "^9.5",
         "symfony/var-dumper": "^5.3",
-        "phpstan/phpstan": "^1.2",
-        "fakerphp/faker": "^1.17"
+        "fakerphp/faker": "^1.17",
+        "vimeo/psalm": "^4.16"
     },
     "require": {
         "symfony/http-foundation": "^5.3",
