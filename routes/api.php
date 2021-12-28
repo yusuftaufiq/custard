@@ -20,6 +20,13 @@ $routes->add('store an activity', new Route(
     methods: ['post'],
 ));
 
+$routes->add('update an activity', new Route(
+    path: '/activity-groups/{id}',
+    defaults: ['_controller' => [ActivityController::class, 'update']],
+    requirements: ['id' => '\d+'],
+    methods: ['patch'],
+));
+
 $routes->add('show an activity', new Route(
     path: '/activity-groups/{id}',
     defaults: ['_controller' => [ActivityController::class, 'show']],

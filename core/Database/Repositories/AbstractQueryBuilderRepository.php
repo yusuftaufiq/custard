@@ -55,7 +55,7 @@ class AbstractQueryBuilderRepository implements RepositoryInterface
 
     public function find(int $id): object
     {
-        $result = $this->query
+        $activity = $this->query
             ->select('*')
             ->from($this->table)
             ->where(function (QueryExpression $expression) {
@@ -65,11 +65,11 @@ class AbstractQueryBuilderRepository implements RepositoryInterface
             ->execute()
             ->fetch(\PDO::FETCH_OBJ);
 
-        if ($result === false) {
+        if (is_object($activity) === false) {
             throw new NotFoundHttpException(sprintf($this->notFoundMessage, $id));
         }
 
-        return $result;
+        return $activity;
     }
 
     public function create(array $values): int
@@ -79,10 +79,11 @@ class AbstractQueryBuilderRepository implements RepositoryInterface
             ->lastInsertId();
     }
 
-    public function update(int $id, array $values): void
+    public function update(int $id, array $values): object
     {
-        $this->connection
-            ->update($this->table, $values, ['id' => $id]);
+        $this->connection->update($this->table, $values, ['id' => $id]);
+
+        return $this->find($id);
     }
 
     public function delete(int $id): void

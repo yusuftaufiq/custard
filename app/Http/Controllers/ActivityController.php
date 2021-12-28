@@ -37,4 +37,17 @@ final class ActivityController
         return JsonResponse::success($activity->find($id))
             ->prepare($request);
     }
+
+    final public function update(Request $request): Response
+    {
+        $requestActivity = $request->toArray();
+
+        ActivityValidator::validate()->store($requestActivity);
+
+        return JsonResponse::success(
+            data: Activity::init()->update((int) $request->get('id', 0), $requestActivity),
+            status: Response::HTTP_CREATED,
+        )->prepare($request);
+    }
+
 }

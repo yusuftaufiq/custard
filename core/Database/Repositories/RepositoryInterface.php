@@ -14,7 +14,7 @@ interface RepositoryInterface
 
     public function create(array $values): int;
 
-    public function update(int $id, array $values): void;
+    public function update(int $id, array $values): object;
 
     public function delete(int $id): void;
 }
