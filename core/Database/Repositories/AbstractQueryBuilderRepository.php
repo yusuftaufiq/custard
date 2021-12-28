@@ -5,14 +5,13 @@ declare(strict_types=1);
 namespace Core\Database\Repositories;
 
 use Cake\Database\Connection;
-use Core\Database\Connections\ConnectionInterface;
 use Cake\Database\Expression\QueryExpression;
-use Cake\Database\Query;
+use Core\Database\Configuration;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class AbstractQueryBuilderRepository implements RepositoryInterface
 {
-    protected string $table = '';
+    protected string $table = 'cake';
 
     protected bool $softDeletes = false;
 
@@ -20,17 +19,16 @@ class AbstractQueryBuilderRepository implements RepositoryInterface
 
     protected Connection $connection;
 
-    protected Query $query;
-
-    public function __construct(ConnectionInterface $connection)
+    public function __construct()
     {
-        $this->connection = $connection->getConnection();
-        $this->query = $connection->getQueryBuilder();
+        $this->connection = Configuration::connect()->getConnection();
     }
 
     public function all(): array
     {
-        return $this->query
+        $query = $this->connection->newQuery();
+
+        return $query
             ->select('*')
             ->from($this->table)
             ->where(function (QueryExpression $expression) {
@@ -42,8 +40,10 @@ class AbstractQueryBuilderRepository implements RepositoryInterface
 
     public function count(int $id): int
     {
-        return (int) $this->query
-            ->select(['count' => $this->query->func()->count('*')])
+        $query = $this->connection->newQuery();
+
+        return (int) $query
+            ->select(['count' => $query->func()->count('*')])
             ->from($this->table)
             ->where(function (QueryExpression $expression) {
                 return $this->softDeletes ? $expression->isNull('deleted_at') : [];
@@ -51,25 +51,29 @@ class AbstractQueryBuilderRepository implements RepositoryInterface
             ->andWhere(['id' => $id])
             ->execute()
             ->fetch(\PDO::FETCH_OBJ)
-            ->count;
+            ?->count;
     }
 
     public function random(): ?object
     {
-        return $this->query
+        $query = $this->connection->newQuery();
+
+        return $query
             ->select('*')
             ->from($this->table)
             ->where(function (QueryExpression $expression) {
                 return $this->softDeletes ? $expression->isNull('deleted_at') : [];
             })
-            ->order($this->query->func()->rand())
+            ->order($query->func()->rand())
             ->execute()
             ->fetch(\PDO::FETCH_OBJ) ?: null;
     }
 
     public function find(int $id): object
     {
-        $activity = $this->query
+        $query = $this->connection->newQuery();
+
+        $activity = $query
             ->select('*')
             ->from($this->table)
             ->where(function (QueryExpression $expression) {

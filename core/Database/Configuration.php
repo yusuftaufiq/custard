@@ -4,21 +4,20 @@ declare(strict_types=1);
 
 namespace Core\Database;
 
+use Core\Database\Connections\ConnectionInterface;
+use Core\Database\Connections\MysqlConnection;
+use Core\Database\Connections\SqliteConnection;
+
 class Configuration
 {
-    public string $host;
+    public const MYSQL = MysqlConnection::class;
 
-    public string $dbname;
+    public const SQLITE = SqliteConnection::class;
 
-    public string $username;
-
-    public string $password;
-
-    public function __construct()
+    final public static function connect(): ConnectionInterface
     {
-        $this->host = getenv('PHINX_DB_HOST') ?: 'localhost';
-        $this->dbname = getenv('PHINX_DB_NAME') ?: '';
-        $this->username = getenv('PHINX_DB_USERNAME') ?: 'root';
-        $this->password = getenv('PHINX_DB_PASSWORD') ?: '';
+        $connectionClass = constant(self::class . '::' . strtoupper(getenv('PHINX_DB_ADAPTER')));
+
+        return new $connectionClass();
     }
 }

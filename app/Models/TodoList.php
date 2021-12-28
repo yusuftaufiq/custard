@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Models;
 
-use Core\Database\Connections\MysqlConnection;
 use Core\Database\Repositories\AbstractQueryBuilderRepository;
 
 final class TodoList extends AbstractQueryBuilderRepository
@@ -21,11 +20,6 @@ final class TodoList extends AbstractQueryBuilderRepository
         'high',
         'very-high',
     ];
-
-    final public function __construct()
-    {
-        parent::__construct(connection: new MysqlConnection());
-    }
 
     final public static function init(): self
     {

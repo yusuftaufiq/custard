@@ -16,11 +16,6 @@ final class Activity extends AbstractQueryBuilderRepository
 
     protected bool $softDeletes = true;
 
-    final public function __construct()
-    {
-        parent::__construct(connection: new MysqlConnection());
-    }
-
     final public static function init(): self
     {
         return new self();
