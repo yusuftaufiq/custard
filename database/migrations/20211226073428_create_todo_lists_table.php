@@ -26,16 +26,20 @@ final class CreateTodoListsTable extends AbstractMigration
                 'update' => 'NO_ACTION',
             ])
             ->addColumn('title', 'string')
-            ->addColumn('is_active', 'boolean', [
+            ->addColumn('is_active', 'enum', [
                 'default' => true,
-                'null' => true,
+                'values' => [
+                    'true',
+                    'false',
+                ],
             ])
             ->addColumn('priority', 'enum', [
+                'default' => 'very-high',
                 'values' => [
-                    "very-low",
-                    "low",
-                    "high",
-                    "very-high",
+                    'very-low',
+                    'low',
+                    'high',
+                    'very-high',
                 ],
             ])
             ->addColumn('created_at', 'timestamp', [
