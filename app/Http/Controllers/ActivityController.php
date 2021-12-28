@@ -22,4 +22,15 @@ final class ActivityController
         return JsonResponse::success(Activity::init()->find($id))
             ->prepare($request);
     }
+
+    final public function store(Request $request): Response
+    {
+        $requestActivity = $request->toArray();
+        $activity = Activity::init();
+
+        $id = $activity->create($requestActivity);
+
+        return JsonResponse::success($activity->find($id))
+            ->prepare($request);
+    }
 }

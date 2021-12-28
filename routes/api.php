@@ -8,26 +8,36 @@ use Symfony\Component\Routing\{RouteCollection, Route};
 
 $routes = new RouteCollection();
 
-$routes->add('activities', new Route(
+$routes->add('show all activities', new Route(
     path: '/activity-groups',
     defaults: ['_controller' => [ActivityController::class, 'index']],
+    methods: ['get'],
 ));
 
-$routes->add('activity', new Route(
+$routes->add('store an activity', new Route(
+    path: '/activity-groups',
+    defaults: ['_controller' => [ActivityController::class, 'store']],
+    methods: ['post'],
+));
+
+$routes->add('show an activity', new Route(
     path: '/activity-groups/{id}',
     defaults: ['_controller' => [ActivityController::class, 'show']],
     requirements: ['id' => '\d+'],
+    methods: ['get'],
 ));
 
-$routes->add('todo_lists', new Route(
+$routes->add('show all todo lists', new Route(
     path: '/todo-items',
     defaults: ['_controller' => [TodoListController::class, 'index']],
+    methods: ['get'],
 ));
 
-$routes->add('todo_list', new Route(
+$routes->add('show a todo list', new Route(
     path: '/todo-items/{id}',
     defaults: ['_controller' => [TodoListController::class, 'show']],
     requirements: ['id' => '\d+'],
+    methods: ['get'],
 ));
 
 return $routes;
