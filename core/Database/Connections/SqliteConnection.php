@@ -15,7 +15,7 @@ final class SqliteConnection implements ConnectionInterface
     {
         $this->connection = new Connection([
             'driver' => Driver\Sqlite::class,
-            'database' => getenv('PHINX_DB_NAME') . getenv('PHINX_DB_SUFFIX')
+            'database' => (getenv('PHINX_DB_NAME') ?: 'database/app') . (getenv('PHINX_DB_SUFFIX') ?: '.db')
         ]);
     }
 

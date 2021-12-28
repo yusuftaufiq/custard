@@ -116,10 +116,8 @@ class AbstractQueryBuilderRepository implements RepositoryInterface
                     'deleted_at' => 'now()',
                 ], ['id' => $id]);
                 break;
-            case false:
-                $this->connection->delete($this->table, ['id' => $id]);
-                break;
             default:
+                $this->connection->delete($this->table, ['id' => $id]);
                 break;
         }
     }

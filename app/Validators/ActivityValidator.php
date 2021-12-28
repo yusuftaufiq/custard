@@ -23,10 +23,8 @@ final class ActivityValidator
         return new self();
     }
 
-    final public function store(array $input): void
+    final public function rules(array $input): void
     {
-        $groups = new Assert\GroupSequence(['Default', 'custom']);
-
         $constraint = new Assert\Collection([
             'title' => new Assert\Required([
                 new Assert\NotBlank(),
@@ -37,7 +35,7 @@ final class ActivityValidator
             ]),
         ], missingFieldsMessage: '{{ field }} cannot be null');
 
-        $violations = $this->validator->validate($input, $constraint, $groups);
+        $violations = $this->validator->validate($input, $constraint);
 
         if ($violations->count() > 0) {
             throw new BadRequestHttpException((string) $violations->get(0)->getMessage());

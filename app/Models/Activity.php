@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Models;
 
-use Core\Database\Connections\MysqlConnection;
 use Cake\Database\Expression\QueryExpression;
 use Core\Database\Repositories\AbstractQueryBuilderRepository;
 
@@ -23,7 +22,9 @@ final class Activity extends AbstractQueryBuilderRepository
 
     final public function todoLists(int $activityId): array
     {
-        return $this->query
+        $query = $this->connection->newQuery();
+
+        return $query
             ->select('*')
             ->from('todo_lists')
             ->where(function (QueryExpression $expression) {

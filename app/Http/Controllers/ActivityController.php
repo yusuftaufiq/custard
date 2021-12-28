@@ -28,7 +28,7 @@ final class ActivityController
     {
         $requestActivity = $request->toArray();
 
-        ActivityValidator::validate()->store($requestActivity);
+        ActivityValidator::validate()->rules($requestActivity);
 
         $activity = Activity::init();
 
@@ -42,7 +42,7 @@ final class ActivityController
     {
         $requestActivity = $request->toArray();
 
-        ActivityValidator::validate()->store($requestActivity);
+        ActivityValidator::validate()->rules($requestActivity);
 
         return JsonResponse::success(
             data: Activity::init()->update((int) $request->get('id', 0), $requestActivity),
