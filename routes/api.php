@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use App\Http\Controllers\ActivityController;
 use App\Http\Controllers\TodoListController;
 use Symfony\Component\Routing\{RouteCollection, Route};
