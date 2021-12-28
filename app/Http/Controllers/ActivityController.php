@@ -50,4 +50,10 @@ final class ActivityController
         )->prepare($request);
     }
 
+    final public function destroy(Request $request): Response
+    {
+        Activity::init()->delete((int) $request->get('id', 0));
+
+        return JsonResponse::success()->prepare($request);
+    }
 }

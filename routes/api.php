@@ -27,6 +27,13 @@ $routes->add('update an activity', new Route(
     methods: ['patch'],
 ));
 
+$routes->add('delete an activity', new Route(
+    path: '/activity-groups/{id}',
+    defaults: ['_controller' => [ActivityController::class, 'destroy']],
+    requirements: ['id' => '\d+'],
+    methods: ['delete'],
+));
+
 $routes->add('show an activity', new Route(
     path: '/activity-groups/{id}',
     defaults: ['_controller' => [ActivityController::class, 'show']],

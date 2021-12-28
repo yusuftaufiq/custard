@@ -8,6 +8,8 @@ interface RepositoryInterface
 {
     public function all(): array;
 
+    public function count(int $id): int;
+
     public function random(): ?object;
 
     public function find(int $id): ?object;

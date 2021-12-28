@@ -40,6 +40,20 @@ class AbstractQueryBuilderRepository implements RepositoryInterface
             ->fetchAll(\PDO::FETCH_OBJ) ?: [];
     }
 
+    public function count(int $id): int
+    {
+        return (int) $this->query
+            ->select(['count' => $this->query->func()->count('*')])
+            ->from($this->table)
+            ->where(function (QueryExpression $expression) {
+                return $this->softDeletes ? $expression->isNull('deleted_at') : [];
+            })
+            ->andWhere(['id' => $id])
+            ->execute()
+            ->fetch(\PDO::FETCH_OBJ)
+            ->count;
+    }
+
     public function random(): ?object
     {
         return $this->query
@@ -88,13 +102,21 @@ class AbstractQueryBuilderRepository implements RepositoryInterface
 
     public function delete(int $id): void
     {
-        if ($this->softDeletes) {
-            $this->update($id, [
-                'deleted_at' => 'now()',
-            ]);
-        } else {
-            $this->connection
-                ->delete($this->table, ['id' => $id]);
+        if ($this->count($id) === 0) {
+            throw new NotFoundHttpException(sprintf($this->notFoundMessage, $id));
+        }
+
+        switch ($this->softDeletes) {
+            case true:
+                $this->connection->update($this->table, [
+                    'deleted_at' => 'now()',
+                ], ['id' => $id]);
+                break;
+            case false:
+                $this->connection->delete($this->table, ['id' => $id]);
+                break;
+            default:
+                break;
         }
     }
 }
