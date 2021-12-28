@@ -1,11 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Listeners;
 
 use App\Events\ResponseEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-class ContentLengthListener implements EventSubscriberInterface
+class ResponseListener implements EventSubscriberInterface
 {
     public static function getSubscribedEvents(): array
     {
