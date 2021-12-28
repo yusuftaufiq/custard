@@ -6,6 +6,7 @@ namespace App\Http\Controllers;
 
 use App\Helpers\Http\JsonResponseHelper as JsonResponse;
 use App\Models\Activity;
+use App\Validators\ActivityValidator;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -26,6 +27,9 @@ final class ActivityController
     final public function store(Request $request): Response
     {
         $requestActivity = $request->toArray();
+
+        ActivityValidator::validate()->store($requestActivity);
+
         $activity = Activity::init();
 
         $id = $activity->create($requestActivity);
