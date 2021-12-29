@@ -3,7 +3,7 @@
 // xdebug_break();
 // eval(\Psy\sh());
 
-namespace App\Tests;
+namespace Tests;
 
 use Core\Framework;
 use PHPUnit\Framework\TestCase;
@@ -11,9 +11,9 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 
-class FrameworkTest extends TestCase
+final class FrameworkTest extends TestCase
 {
-    public function testNotFoundHandling()
+    final public function testNotFoundHandling(): void
     {
         $framework = $this->getFrameworkForException(new ResourceNotFoundException());
 
@@ -22,7 +22,7 @@ class FrameworkTest extends TestCase
         $this->assertEquals(404, $response->getStatusCode());
     }
 
-    public function testErrorHandling()
+    final public function testErrorHandling(): void
     {
         $framework = $this->getFrameworkForException(new \RuntimeException());
 
@@ -31,19 +31,7 @@ class FrameworkTest extends TestCase
         $this->assertEquals(500, $response->getStatusCode());
     }
 
-    public function testControllerResponse()
-    {
-        $routes = include __DIR__ . '/../routes/api.php';
-
-        $framework = new Framework($routes);
-
-        $response = $framework->handle(Request::create('/is_leap_year/2000'));
-
-        $this->assertEquals(200, $response->getStatusCode());
-        $this->assertStringContainsString('Yep, this is a leap year!', $response->getContent());
-    }
-
-    private function getFrameworkForException(\RuntimeException $exception)
+    final public function getFrameworkForException(\RuntimeException $exception): Framework
     {
         $routes = $this->createMock(RouteCollection::class);
 
