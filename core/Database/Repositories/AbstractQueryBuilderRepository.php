@@ -117,7 +117,7 @@ class AbstractQueryBuilderRepository implements RepositoryInterface
         switch ($this->softDeletes) {
             case true:
                 $this->connection->update($this->table, [
-                    'deleted_at' => 'now()',
+                    'deleted_at' => $this->connection->newQuery()->func()->now(),
                 ], ['id' => $id]);
                 break;
             default:
