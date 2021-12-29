@@ -11,7 +11,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class AbstractQueryBuilderRepository implements RepositoryInterface
 {
-    protected string $table = 'cake';
+    protected string $table = 'app';
 
     protected bool $softDeletes = false;
 

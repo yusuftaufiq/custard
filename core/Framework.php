@@ -14,7 +14,7 @@ use Symfony\Component\Routing\{Matcher\UrlMatcher, RequestContext, RouteCollecti
 
 final class Framework extends HttpKernel
 {
-    public function __construct(RouteCollection $routes)
+    final public function __construct(RouteCollection $routes)
     {
         $context = new RequestContext();
         $matcher = new UrlMatcher($routes, $context);
@@ -33,7 +33,7 @@ final class Framework extends HttpKernel
         parent::__construct($dispatcher, $controllerResolver, $requestStack, $argumentResolver);
     }
 
-    public function handle(
+    final public function handle(
         Request $request,
         int $type = HttpKernelInterface::MAIN_REQUEST,
         bool $catch = true
