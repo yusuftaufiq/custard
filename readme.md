@@ -36,3 +36,14 @@
     ```
     php -a -d auto_prepend_file=./path/to/file.php
     ```
+- Composer setting environment variables
+    ```
+    {
+        "scripts": {
+            "install-phpstan": [
+                "@putenv COMPOSER=phpstan-composer.json",
+                "composer install --prefer-dist"
+            ]
+        }
+    }
+    ```
