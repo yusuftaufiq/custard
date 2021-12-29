@@ -8,7 +8,7 @@ use App\{Events, Listeners};
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\{Request, Response, RequestStack};
 use Symfony\Component\HttpKernel\Controller\{ArgumentResolver, ControllerResolver};
-use Symfony\Component\HttpKernel\EventListener\{ErrorListener, ResponseListener, RouterListener};
+use Symfony\Component\HttpKernel\EventListener\RouterListener;
 use Symfony\Component\HttpKernel\{HttpKernel, HttpKernelInterface};
 use Symfony\Component\Routing\{Matcher\UrlMatcher, RequestContext, RouteCollection};
 

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Validators;
 
+use App\Models\TodoList;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Validator\Validation;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -37,12 +38,7 @@ final class TodoListValidator
                 new Assert\Choice([true, false]),
             ]),
             'priority' => new Assert\Optional([
-                new Assert\Choice([
-                    'very-low',
-                    'low',
-                    'high',
-                    'very-high',
-                ]),
+                new Assert\Choice(TodoList::init()->priority),
             ]),
         ], missingFieldsMessage: '{{ field }} cannot be null');
 

@@ -33,9 +33,5 @@ final class Activity extends AbstractQueryBuilderRepository
             ->AndWhere(['activity_group_id' => $activityId])
             ->execute()
             ->fetchAll(\PDO::FETCH_OBJ) ?: [];
-
-        // $this->chains($this->all(), [
-        //     'AndWhere' => ['activity_group_id' => $activityId],
-        // ])->fetchAll(\PDO::FETCH_OBJ);
     }
 }
