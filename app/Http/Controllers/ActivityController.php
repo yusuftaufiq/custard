@@ -34,7 +34,7 @@ final class ActivityController
 
         $id = $activity->create($requestActivity);
 
-        return JsonResponse::success($activity->find($id))
+        return JsonResponse::success($activity->find($id), status: Response::HTTP_CREATED)
             ->prepare($request);
     }
 
@@ -44,10 +44,8 @@ final class ActivityController
 
         ActivityValidator::validate()->rules($requestActivity);
 
-        return JsonResponse::success(
-            data: Activity::init()->update((int) $request->get('id', 0), $requestActivity),
-            status: Response::HTTP_CREATED,
-        )->prepare($request);
+        return JsonResponse::success(Activity::init()->update((int) $request->get('id', 0), $requestActivity))
+            ->prepare($request);
     }
 
     final public function destroy(Request $request): Response
