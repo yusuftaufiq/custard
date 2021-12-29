@@ -38,7 +38,9 @@ final class ActivityValidator
         $violations = $this->validator->validate($input, $constraint);
 
         if ($violations->count() > 0) {
-            throw new BadRequestHttpException((string) $violations->get(0)->getMessage());
+            throw new BadRequestHttpException(
+                str_replace('"', '', (string) $violations->get(0)->getMessage())
+            );
         }
     }
 
@@ -57,7 +59,9 @@ final class ActivityValidator
         $violations = $this->validator->validate($input, $constraint);
 
         if ($violations->count() > 0) {
-            throw new BadRequestHttpException((string) $violations->get(0)->getMessage());
+            throw new BadRequestHttpException(
+                str_replace('"', '', (string) $violations->get(0)->getMessage())
+            );
         }
     }
 }

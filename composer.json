@@ -9,7 +9,7 @@
     "scripts": {
         "start": [
             "Composer\\Config::disableProcessTimeout",
-            "@php -S localhost:8080 web/index.php"
+            "@php -S 127.0.0.1:8080 web/index.php"
         ],
         "migrate": "./vendor/bin/phinx migrate",
         "seed": "./vendor/bin/phinx seed:run",
