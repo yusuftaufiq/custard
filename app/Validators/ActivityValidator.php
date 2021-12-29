@@ -23,10 +23,29 @@ final class ActivityValidator
         return new self();
     }
 
-    final public function rules(array $input): void
+    final public function store(array $input): void
     {
         $constraint = new Assert\Collection([
             'title' => new Assert\Required([
+                new Assert\NotBlank(),
+                new Assert\NotNull(),
+            ]),
+            'email' => new Assert\Optional([
+                new Assert\Email(),
+            ]),
+        ], missingFieldsMessage: '{{ field }} cannot be null');
+
+        $violations = $this->validator->validate($input, $constraint);
+
+        if ($violations->count() > 0) {
+            throw new BadRequestHttpException((string) $violations->get(0)->getMessage());
+        }
+    }
+
+    final public function update(array $input): void
+    {
+        $constraint = new Assert\Collection([
+            'title' => new Assert\Optional([
                 new Assert\NotBlank(),
                 new Assert\NotNull(),
             ]),

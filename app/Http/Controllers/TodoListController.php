@@ -31,13 +31,30 @@ final class TodoListController
     {
         $requestTodoList = $request->toArray();
 
-        TodoListValidator::validate()->rules($requestTodoList);
+        TodoListValidator::validate()->store($requestTodoList);
 
         $todoList = TodoList::init();
 
         $id = $todoList->create($requestTodoList);
 
-        return JsonResponse::success($todoList->find($id))
+        return JsonResponse::success($todoList->find($id), status: Response::HTTP_CREATED)
             ->prepare($request);
+    }
+
+    final public function update(Request $request): Response
+    {
+        $requestTodoList = $request->toArray();
+
+        TodoListValidator::validate()->update($requestTodoList);
+
+        return JsonResponse::success(TodoList::init()->update((int) $request->get('id', 0), $requestTodoList))
+            ->prepare($request);
+    }
+
+    final public function destroy(Request $request): Response
+    {
+        TodoList::init()->delete((int) $request->get('id', 0));
+
+        return JsonResponse::success()->prepare($request);
     }
 }
