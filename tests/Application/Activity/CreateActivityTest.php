@@ -49,7 +49,7 @@ final class CreateActivityTest extends TestCase
     final public function testBadRequestStoreAnActivity(): void
     {
         $this->expectException(BadRequestHttpException::class);
-        $this->expectExceptionMessage('"title" cannot be null');
+        $this->expectExceptionMessage('title cannot be null');
 
         $request = $this->getMockRequest();
         $request

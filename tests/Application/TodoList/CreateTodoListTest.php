@@ -52,7 +52,7 @@ final class CreateTodoListTest extends TestCase
     final public function testBadRequestStoreAnTodoList(): void
     {
         $this->expectException(BadRequestHttpException::class);
-        $this->expectExceptionMessage('"activity_group_id" cannot be null');
+        $this->expectExceptionMessage('activity_group_id cannot be null');
 
         $request = $this->getMockRequest();
         $request

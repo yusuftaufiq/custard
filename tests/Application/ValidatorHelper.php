@@ -20,6 +20,5 @@ trait ValidatorHelper
     private function validateResultIsSuccess(object $content): void
     {
         $this->assertSame($content?->status, 'Success');
-        $this->assertSame($content?->message, 'Success');
     }
 }
