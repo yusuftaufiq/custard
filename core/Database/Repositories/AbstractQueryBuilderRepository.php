@@ -99,6 +99,10 @@ class AbstractQueryBuilderRepository implements RepositoryInterface
 
     public function update(int $id, array $values): object
     {
+        if ($this->count($id) === 0) {
+            throw new NotFoundHttpException(sprintf($this->notFoundMessage, $id));
+        }
+
         $this->connection->update($this->table, $values, ['id' => $id]);
 
         return $this->find($id);
