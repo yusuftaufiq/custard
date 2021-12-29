@@ -10,39 +10,24 @@ use Tests\Application\ValidatorHelper;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-final class ShowActivityTest extends TestCase
+final class DeleteActivityTest extends TestCase
 {
     use MockHelper;
     use ValidatorHelper;
 
-    final public function testShowAllActivities(): void
-    {
-        $expectedData = Activity::init()->all();
-
-        $request = $this->getMockRequest();
-
-        $activity = new ActivityController();
-        $response = $activity->index($request);
-
-        $this->assertSame(Response::HTTP_OK, $response->getStatusCode());
-        $this->assertJson($response->getContent());
-
-        $content = json_decode($response->getContent());
-
-        $this->validateJsonStructure($content);
-        $this->validateResultIsSuccess($content);
-        $this->assertIsArray($content?->data);
-        $this->assertEquals($expectedData, $content?->data);
-    }
-
-    final public function testShowAnActivity(): void
+    final public function testDeleteAnActivity(): void
     {
         $expectedData = Activity::init()->random();
 
         $request = $this->getMockRequest();
+        $request
+            ->expects($this->once())
+            ->method('get')
+            ->with('id')
+            ->will($this->returnValue($expectedData?->id));
 
         $activity = new ActivityController();
-        $response = $activity->show($request, $expectedData?->id);
+        $response = $activity->destroy($request);
 
         $this->assertSame(Response::HTTP_OK, $response->getStatusCode());
         $this->assertJson($response->getContent());
@@ -51,8 +36,6 @@ final class ShowActivityTest extends TestCase
 
         $this->validateJsonStructure($content);
         $this->validateResultIsSuccess($content);
-        $this->assertIsObject($content?->data);
-        $this->assertEquals($expectedData, $content?->data);
     }
 
     final public function testActivityNotFound(): void
@@ -61,8 +44,13 @@ final class ShowActivityTest extends TestCase
         $this->expectExceptionMessage('Activity with ID 0 Not Found');
 
         $request = $this->getMockRequest();
+        $request
+            ->expects($this->once())
+            ->method('get')
+            ->with('id')
+            ->will($this->returnValue(0));
 
         $activity = new ActivityController();
-        $activity->show($request, 0);
+        $activity->destroy($request);
     }
 }

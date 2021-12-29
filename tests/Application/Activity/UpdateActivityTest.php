@@ -2,22 +2,24 @@
 
 namespace Tests\Application\Activity;
 
-use App\Http\Controllers\ActivityController;
+use App\Models\Activity;
 use PHPUnit\Framework\TestCase;
 use Tests\Application\MockHelper;
 use Tests\Application\ValidatorHelper;
+use App\Http\Controllers\ActivityController;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-final class CreateActivityTest extends TestCase
+final class UpdateActivityTest extends TestCase
 {
     use MockHelper;
     use ValidatorHelper;
 
-    final public function testStoreAnActivity(): void
+    final public function testUpdateAnActivity(): void
     {
         $expectedData = [
             'title' => 'Create something beautiful',
+            'email' => 'jonathan.joestar@jmail.com',
         ];
 
         $request = $this->getMockRequest();
@@ -25,11 +27,16 @@ final class CreateActivityTest extends TestCase
             ->expects($this->once())
             ->method('toArray')
             ->will($this->returnValue($expectedData));
+        $request
+            ->expects($this->once())
+            ->method('get')
+            ->with('id')
+            ->will($this->returnValue(Activity::init()->random()?->id));
 
         $activity = new ActivityController();
-        $response = $activity->store($request);
+        $response = $activity->update($request);
 
-        $this->assertSame(Response::HTTP_CREATED, $response->getStatusCode());
+        $this->assertSame(Response::HTTP_OK, $response->getStatusCode());
         $this->assertJson($response->getContent());
 
         $content = json_decode($response->getContent());
@@ -41,23 +48,27 @@ final class CreateActivityTest extends TestCase
         $this->assertObjectHasAttribute('id', $content?->data);
         $this->assertSame($expectedData['title'], $content?->data?->title);
         $this->assertObjectHasAttribute('email', $content?->data);
-        $this->assertObjectHasAttribute('created_at', $content?->data);
-        $this->assertObjectHasAttribute('updated_at', $content?->data);
-        $this->assertObjectHasAttribute('deleted_at', $content?->data);
     }
 
-    final public function testBadRequestStoreAnActivity(): void
+    final public function testActivityNotFound(): void
     {
-        $this->expectException(BadRequestHttpException::class);
-        $this->expectExceptionMessage('"title" cannot be null');
+        $this->expectException(NotFoundHttpException::class);
+        $this->expectExceptionMessage('Activity with ID 0 Not Found');
 
         $request = $this->getMockRequest();
         $request
             ->expects($this->once())
+            ->method('get')
+            ->with('id')
+            ->will($this->returnValue(0));
+        $request
+            ->expects($this->once())
             ->method('toArray')
-            ->will($this->returnValue([]));
+            ->will($this->returnValue([
+                'title' => 'Hello world!',
+            ]));
 
         $activity = new ActivityController();
-        $activity->store($request);
+        $activity->update($request);
     }
 }
