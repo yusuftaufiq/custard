@@ -16,7 +16,10 @@ final class TodoListController
     {
         $todoLists = match ($request->get('activity_group_id', null)) {
             null => TodoList::init()->all(),
-            default => Activity::init()->todoLists((int) $request->get('activity_group_id', 0)),
+            default => TodoList::init()->find(
+                id: (int) $request->get('activity_group_id', 0),
+                column: 'activity_group_id',
+            ),
         };
 
         $response =  new JsonResponse([

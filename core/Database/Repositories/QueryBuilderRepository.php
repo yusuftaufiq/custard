@@ -38,7 +38,7 @@ class QueryBuilderRepository implements RepositoryInterface
             ->fetchAll(\PDO::FETCH_OBJ) ?: [];
     }
 
-    public function count(int $id): int
+    public function count(int $id, string $column = 'id'): int
     {
         $query = $this->connection->newQuery();
 
@@ -48,7 +48,7 @@ class QueryBuilderRepository implements RepositoryInterface
             ->where(fn (QueryExpression $expression) => (
                 $this->softDeletes ? $expression->isNull('deleted_at') : []
             ))
-            ->andWhere(['id' => $id])
+            ->andWhere([$column => $id])
             ->execute()
             ->fetch(\PDO::FETCH_OBJ)
             ?->count;
@@ -69,25 +69,25 @@ class QueryBuilderRepository implements RepositoryInterface
             ->fetch(\PDO::FETCH_OBJ) ?: null;
     }
 
-    public function find(int $id): object
+    public function find(int $id, string $column = 'id'): object|array
     {
         $query = $this->connection->newQuery();
 
-        $activity = $query
+        $data = $query
             ->select('*')
             ->from($this->table)
             ->where(fn (QueryExpression $expression) => (
                 $this->softDeletes ? $expression->isNull('deleted_at') : []
             ))
-            ->andWhere(['id' => $id])
+            ->andWhere([$column => $id])
             ->execute()
             ->fetch(\PDO::FETCH_OBJ);
 
-        if (is_object($activity) === false) {
+        if (is_object($data) === false && $column === 'id') {
             throw new NotFoundHttpException(sprintf($this->notFoundMessage, $id));
         }
 
-        return $activity;
+        return $data ?: [];
     }
 
     public function create(array $values): int
@@ -108,7 +108,7 @@ class QueryBuilderRepository implements RepositoryInterface
         return $this->find($id);
     }
 
-    public function delete(int $id): void
+    public function delete(int $id, string $column = 'id'): void
     {
         if ($this->count($id) === 0) {
             throw new NotFoundHttpException(sprintf($this->notFoundMessage, $id));
@@ -118,10 +118,10 @@ class QueryBuilderRepository implements RepositoryInterface
             case true:
                 $this->connection->update($this->table, [
                     'deleted_at' => $this->connection->newQuery()->func()->now(),
-                ], ['id' => $id]);
+                ], [$column => $id]);
                 break;
             default:
-                $this->connection->delete($this->table, ['id' => $id]);
+                $this->connection->delete($this->table, [$column => $id]);
                 break;
         }
     }

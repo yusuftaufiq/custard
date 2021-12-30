@@ -12,7 +12,7 @@ interface RepositoryInterface
 
     public function random(): ?object;
 
-    public function find(int $id): ?object;
+    public function find(int $id): object|array;
 
     public function create(array $values): int;
 
