@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Models;
 
-use Core\Database\Repositories\AbstractQueryBuilderRepository;
+use Core\Database\Repositories\QueryBuilderRepository;
 
-final class TodoList extends AbstractQueryBuilderRepository
+final class TodoList extends QueryBuilderRepository
 {
     protected string $table = 'todo_lists';
 

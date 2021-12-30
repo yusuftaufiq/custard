@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace App\Models;
 
 use Cake\Database\Expression\QueryExpression;
-use Core\Database\Repositories\AbstractQueryBuilderRepository;
+use Core\Database\Repositories\QueryBuilderRepository;
 
-final class Activity extends AbstractQueryBuilderRepository
+final class Activity extends QueryBuilderRepository
 {
     protected string $table = 'activities';
 
@@ -27,9 +27,9 @@ final class Activity extends AbstractQueryBuilderRepository
         return $query
             ->select('*')
             ->from('todo_lists')
-            ->where(function (QueryExpression $expression) {
-                return $this->softDeletes ? $expression->isNull('deleted_at') : [];
-            })
+            ->where(fn (QueryExpression $expression) => (
+                $this->softDeletes ? $expression->isNull('deleted_at') : []
+            ))
             ->AndWhere(['activity_group_id' => $activityId])
             ->execute()
             ->fetchAll(\PDO::FETCH_OBJ) ?: [];

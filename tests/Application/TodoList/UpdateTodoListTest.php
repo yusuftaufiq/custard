@@ -42,7 +42,7 @@ final class UpdateTodoListTest extends TestCase
         $content = json_decode($response->getContent());
 
         $this->validateJsonStructure($content);
-        $this->validateResultIsSuccess($content);
+        $this->assertSame($content?->status, 'Success');
         $this->assertIsObject($content?->data);
 
         $this->assertObjectHasAttribute('id', $content?->data);

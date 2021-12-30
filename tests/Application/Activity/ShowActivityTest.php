@@ -30,7 +30,7 @@ final class ShowActivityTest extends TestCase
         $content = json_decode($response->getContent());
 
         $this->validateJsonStructure($content);
-        $this->validateResultIsSuccess($content);
+        $this->assertSame($content?->status, 'Success');
         $this->assertIsArray($content?->data);
         $this->assertEquals($expectedData, $content?->data);
     }
@@ -50,7 +50,7 @@ final class ShowActivityTest extends TestCase
         $content = json_decode($response->getContent());
 
         $this->validateJsonStructure($content);
-        $this->validateResultIsSuccess($content);
+        $this->assertSame($content?->status, 'Success');
         $this->assertIsObject($content?->data);
         $this->assertEquals($expectedData, $content?->data);
     }

@@ -16,9 +16,4 @@ trait ValidatorHelper
             $this->assertObjectHasAttribute($expected, $content);
         });
     }
-
-    private function validateResultIsSuccess(object $content): void
-    {
-        $this->assertSame($content?->status, 'Success');
-    }
 }

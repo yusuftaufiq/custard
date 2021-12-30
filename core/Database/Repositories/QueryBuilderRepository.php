@@ -9,7 +9,7 @@ use Cake\Database\Expression\QueryExpression;
 use Core\Database\Configuration;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-class AbstractQueryBuilderRepository implements RepositoryInterface
+class QueryBuilderRepository implements RepositoryInterface
 {
     protected string $table = 'app';
 
@@ -31,9 +31,9 @@ class AbstractQueryBuilderRepository implements RepositoryInterface
         return $query
             ->select('*')
             ->from($this->table)
-            ->where(function (QueryExpression $expression) {
-                return $this->softDeletes ? $expression->isNull('deleted_at') : [];
-            })
+            ->where(fn (QueryExpression $expression) => (
+                $this->softDeletes ? $expression->isNull('deleted_at') : []
+            ))
             ->execute()
             ->fetchAll(\PDO::FETCH_OBJ) ?: [];
     }
@@ -45,9 +45,9 @@ class AbstractQueryBuilderRepository implements RepositoryInterface
         return (int) $query
             ->select(['count' => $query->func()->count('*')])
             ->from($this->table)
-            ->where(function (QueryExpression $expression) {
-                return $this->softDeletes ? $expression->isNull('deleted_at') : [];
-            })
+            ->where(fn (QueryExpression $expression) => (
+                $this->softDeletes ? $expression->isNull('deleted_at') : []
+            ))
             ->andWhere(['id' => $id])
             ->execute()
             ->fetch(\PDO::FETCH_OBJ)
@@ -61,9 +61,9 @@ class AbstractQueryBuilderRepository implements RepositoryInterface
         return $query
             ->select('*')
             ->from($this->table)
-            ->where(function (QueryExpression $expression) {
-                return $this->softDeletes ? $expression->isNull('deleted_at') : [];
-            })
+            ->where(fn (QueryExpression $expression) => (
+                $this->softDeletes ? $expression->isNull('deleted_at') : []
+            ))
             ->order($query->func()->rand())
             ->execute()
             ->fetch(\PDO::FETCH_OBJ) ?: null;
@@ -76,9 +76,9 @@ class AbstractQueryBuilderRepository implements RepositoryInterface
         $activity = $query
             ->select('*')
             ->from($this->table)
-            ->where(function (QueryExpression $expression) {
-                return $this->softDeletes ? $expression->isNull('deleted_at') : [];
-            })
+            ->where(fn (QueryExpression $expression) => (
+                $this->softDeletes ? $expression->isNull('deleted_at') : []
+            ))
             ->andWhere(['id' => $id])
             ->execute()
             ->fetch(\PDO::FETCH_OBJ);
