@@ -19,7 +19,7 @@ final class CreateTodoListsTable extends AbstractMigration
      */
     final public function change(): void
     {
-        $this->table('todo_lists')
+        $this->table('todos')
             ->addColumn('activity_group_id', 'integer')
             ->addForeignKey('activity_group_id', 'activities', 'id', [
                 'delete' => 'CASCADE',

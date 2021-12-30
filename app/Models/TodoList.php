@@ -8,7 +8,7 @@ use Core\Database\Repositories\QueryBuilderRepository;
 
 final class TodoList extends QueryBuilderRepository
 {
-    protected string $table = 'todo_lists';
+    protected string $table = 'todos';
 
     protected string $notFoundMessage = 'Todo with ID %d Not Found';
 
