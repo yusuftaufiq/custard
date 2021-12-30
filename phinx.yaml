@@ -6,11 +6,11 @@ environments:
     default_migration_table: migrations
     default_environment: production
     production:
-        adapter: '%%PHINX_DB_ADAPTER%%'
-        host: '%%PHINX_DB_HOST%%'
-        name: '%%PHINX_DB_NAME%%'
-        user: '%%PHINX_DB_USERNAME%%'
-        pass: '%%PHINX_DB_PASSWORD%%'
+        adapter: '%%DB_ADAPTER%%'
+        host: '%%MYSQL_HOST%%'
+        name: '%%MYSQL_DBNAME%%'
+        user: '%%MYSQL_USER%%'
+        pass: '%%MYSQL_PASSWORD%%'
         port: 3306
         charset: utf8
 

@@ -17,7 +17,7 @@ class Configuration
     final public static function connect(): ConnectionInterface
     {
         /** @var Configuration::MYSQL | Configuration::SQLITE */
-        $connectionClass = constant(self::class . '::' . strtoupper(getenv('PHINX_DB_ADAPTER') ?: 'sqlite'));
+        $connectionClass = constant(self::class . '::' . strtoupper(getenv('DB_ADAPTER') ?: 'sqlite'));
 
         /** @var ConnectionInterface */
         return new $connectionClass();

@@ -16,10 +16,10 @@ final class MysqlConnection implements ConnectionInterface
     final public function __construct()
     {
         $this->driver = new Driver\Mysql([
-            'host' => getenv('PHINX_DB_HOST'),
-            'database' => getenv('PHINX_DB_NAME'),
-            'username' => getenv('PHINX_DB_USERNAME'),
-            'password' => getenv('PHINX_DB_PASSWORD'),
+            'host' => getenv('MYSQL_HOST'),
+            'database' => getenv('MYSQL_DBNAME'),
+            'username' => getenv('MYSQL_USER'),
+            'password' => getenv('MYSQL_PASSWORD'),
         ]);
 
         $this->connection = new Connection([
