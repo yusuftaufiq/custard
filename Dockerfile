@@ -25,7 +25,6 @@ RUN apk add \
   php8-xml \
   php8-xmlreader \
   php8-zlib \
-  php8-pdo \
   php8-pdo_mysql \
   supervisor
 
@@ -74,8 +73,8 @@ COPY --chown=nobody ./ /var/www/html/devcode_todo/
 # Expose the port nginx is reachable on
 EXPOSE 3030
 
-# Let supervisord start nginx & php-fpm
-CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
+# Run migration also let supervisord start nginx & php-fpm
+CMD /var/www/html/devcode_todo/vendor/bin/phinx migrate -q && /usr/bin/supervisord -s -c /etc/supervisor/conf.d/supervisord.conf
 
 # Configure a healthcheck to validate that everything is up&running
 HEALTHCHECK --timeout=10s CMD curl --silent --fail http://127.0.0.1:8080/fpm-ping
