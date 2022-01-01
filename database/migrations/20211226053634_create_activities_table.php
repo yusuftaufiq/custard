@@ -8,7 +8,7 @@ final class CreateActivitiesTable extends AbstractMigration
 {
     final public function change(): void
     {
-        $this->table('activities')
+        $this->table('activities', ['engine' => 'MyISAM'])
             ->addColumn('email', 'string', [
                 'null' => true,
             ])
