@@ -38,7 +38,7 @@ class QueryBuilderRepository implements RepositoryInterface
             ->fetchAll(\PDO::FETCH_OBJ) ?: [];
     }
 
-    public function count(int $id, string $column = 'id'): int
+    public function count(mixed $value, string $column = 'id'): int
     {
         $query = $this->connection->newQuery();
 
@@ -48,7 +48,7 @@ class QueryBuilderRepository implements RepositoryInterface
             ->where(fn (QueryExpression $expression) => (
                 $this->softDeletes ? $expression->isNull('deleted_at') : []
             ))
-            ->andWhere([$column => $id])
+            ->andWhere([$column => $value])
             ->execute()
             ->fetch(\PDO::FETCH_OBJ)
             ?->count;
@@ -69,7 +69,7 @@ class QueryBuilderRepository implements RepositoryInterface
             ->fetch(\PDO::FETCH_OBJ) ?: null;
     }
 
-    public function find(int $id, string $column = 'id'): object|array
+    public function find(mixed $value, string $column = 'id'): object|array
     {
         $query = $this->connection->newQuery();
 
@@ -79,12 +79,12 @@ class QueryBuilderRepository implements RepositoryInterface
             ->where(fn (QueryExpression $expression) => (
                 $this->softDeletes ? $expression->isNull('deleted_at') : []
             ))
-            ->andWhere([$column => $id])
+            ->andWhere([$column => $value])
             ->execute()
             ->fetch(\PDO::FETCH_OBJ);
 
         if (is_object($data) === false && $column === 'id') {
-            throw new NotFoundHttpException(sprintf($this->notFoundMessage, $id));
+            throw new NotFoundHttpException(sprintf($this->notFoundMessage, $value));
         }
 
         return $data ?: [];
@@ -108,20 +108,20 @@ class QueryBuilderRepository implements RepositoryInterface
         return $this->find($id);
     }
 
-    public function delete(int $id, string $column = 'id'): void
+    public function delete(mixed $value, string $column = 'id'): void
     {
-        if ($this->count($id) === 0) {
-            throw new NotFoundHttpException(sprintf($this->notFoundMessage, $id));
+        if ($this->count($value) === 0) {
+            throw new NotFoundHttpException(sprintf($this->notFoundMessage, $value));
         }
 
         switch ($this->softDeletes) {
             case true:
                 $this->connection->update($this->table, [
                     'deleted_at' => $this->connection->newQuery()->func()->now(),
-                ], [$column => $id]);
+                ], [$column => $value]);
                 break;
             default:
-                $this->connection->delete($this->table, [$column => $id]);
+                $this->connection->delete($this->table, [$column => $value]);
                 break;
         }
     }
