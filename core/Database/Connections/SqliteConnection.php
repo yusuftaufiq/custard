@@ -6,6 +6,7 @@ namespace Core\Database\Connections;
 
 use Cake\Database\Connection;
 use Cake\Database\Driver;
+use Cake\Database\Query;
 
 final class SqliteConnection implements ConnectionInterface
 {
@@ -22,5 +23,15 @@ final class SqliteConnection implements ConnectionInterface
     final public function getConnection(): Connection
     {
         return $this->connection;
+    }
+
+    final public function getQuery(): Query
+    {
+        return $this->connection->newQuery();
+    }
+
+    final public function getLastModifiedTime(string $table): \DateTime
+    {
+        return new \DateTime();
     }
 }

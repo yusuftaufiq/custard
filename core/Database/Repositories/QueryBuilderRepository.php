@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Core\Database\Repositories;
 
-use Cake\Database\Connection;
 use Cake\Database\Expression\QueryExpression;
 use Core\Database\Configuration;
+use Core\Database\Connections\ConnectionInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class QueryBuilderRepository implements RepositoryInterface
@@ -17,16 +17,16 @@ class QueryBuilderRepository implements RepositoryInterface
 
     protected string $notFoundMessage = 'Resources with id %d not found';
 
-    protected Connection $connection;
+    protected ConnectionInterface $connection;
 
     public function __construct()
     {
-        $this->connection = Configuration::connect()->getConnection();
+        $this->connection = Configuration::connect();
     }
 
     public function all(): array
     {
-        $query = $this->connection->newQuery();
+        $query = $this->connection->getQuery();
 
         return $query
             ->select('*')
@@ -40,7 +40,7 @@ class QueryBuilderRepository implements RepositoryInterface
 
     public function count(mixed $value, string $column = 'id'): int
     {
-        $query = $this->connection->newQuery();
+        $query = $this->connection->getQuery();
 
         return (int) $query
             ->select(['count' => $query->func()->count('*')])
@@ -56,7 +56,7 @@ class QueryBuilderRepository implements RepositoryInterface
 
     public function random(): ?object
     {
-        $query = $this->connection->newQuery();
+        $query = $this->connection->getQuery();
 
         return $query
             ->select('*')
@@ -71,7 +71,7 @@ class QueryBuilderRepository implements RepositoryInterface
 
     public function find(mixed $value, string $column = 'id'): object|array
     {
-        $query = $this->connection->newQuery();
+        $query = $this->connection->getQuery();
 
         $data = $query
             ->select('*')
@@ -92,7 +92,7 @@ class QueryBuilderRepository implements RepositoryInterface
 
     public function create(array $values): int
     {
-        return (int) $this->connection
+        return (int) $this->connection->getConnection()
             ->insert($this->table, $values)
             ->lastInsertId();
     }
@@ -103,7 +103,7 @@ class QueryBuilderRepository implements RepositoryInterface
             throw new NotFoundHttpException(sprintf($this->notFoundMessage, $id));
         }
 
-        $this->connection->update($this->table, $values, ['id' => $id]);
+        $this->connection->getConnection()->update($this->table, $values, ['id' => $id]);
 
         return $this->find($id);
     }
@@ -116,13 +116,18 @@ class QueryBuilderRepository implements RepositoryInterface
 
         switch ($this->softDeletes) {
             case true:
-                $this->connection->update($this->table, [
-                    'deleted_at' => $this->connection->newQuery()->func()->now(),
+                $this->connection->getConnection()->update($this->table, [
+                    'deleted_at' => $this->connection->getQuery()->func()->now(),
                 ], [$column => $value]);
                 break;
             default:
-                $this->connection->delete($this->table, [$column => $value]);
+                $this->connection->getConnection()->delete($this->table, [$column => $value]);
                 break;
         }
+    }
+
+    public function lastModifiedTime(): \DateTime
+    {
+        return $this->connection->getLastModifiedTime($this->table);
     }
 }
