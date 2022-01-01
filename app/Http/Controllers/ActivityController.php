@@ -13,24 +13,48 @@ final class ActivityController
 {
     final public function index(Request $request): JsonResponse
     {
-        $response =  new JsonResponse([
+        $activity = new Activity();
+        $response = new JsonResponse();
+
+        $response->setLastModified($activity->lastModifiedTime());
+        $response->setPublic();
+
+        if ($response->isNotModified($request)) {
+            return $response;
+        }
+
+        $response->setData([
             'status' => 'Success',
             'message' => 'OK',
-            'data' => Activity::init()->all(),
-        ], JsonResponse::HTTP_OK);
+            'data' => $activity->all(),
+        ]);
+        $response->setStatusCode(JsonResponse::HTTP_OK);
+        $response->prepare($request);
 
-        return $response->prepare($request);
+        return $response;
     }
 
     final public function show(Request $request, int $id): JsonResponse
     {
-        $response =  new JsonResponse([
+        $activity = new Activity();
+        $response = new JsonResponse();
+
+        $response->setLastModified($activity->lastModifiedTime());
+        $response->setPublic();
+
+        if ($response->isNotModified($request)) {
+            return $response;
+        }
+
+        $response->setData([
             'status' => 'Success',
             'message' => 'OK',
-            'data' => Activity::init()->find($id),
-        ], JsonResponse::HTTP_OK);
+            'data' => $activity->find($id),
+        ]);
+        $response->setStatusCode(JsonResponse::HTTP_OK);
+        $response->prepare($request);
 
-        return $response->prepare($request);
+        return $response;
     }
 
     final public function store(Request $request): JsonResponse
@@ -39,7 +63,7 @@ final class ActivityController
 
         ActivityValidator::validate()->store($requestActivity);
 
-        $activity = Activity::init();
+        $activity = new Activity();
 
         $id = $activity->create($requestActivity);
 

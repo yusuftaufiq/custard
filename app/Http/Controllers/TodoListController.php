@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
-use App\Models\Activity;
 use App\Models\TodoList;
 use App\Validators\TodoListValidator;
 use Symfony\Component\HttpFoundation\Request;
@@ -14,32 +13,56 @@ final class TodoListController
 {
     final public function index(Request $request): JsonResponse
     {
+        $todoList = new TodoList();
+        $response = new JsonResponse();
+
+        $response->setLastModified($todoList->lastModifiedTime());
+        $response->setPublic();
+
+        if ($response->isNotModified($request)) {
+            return $response;
+        }
+
         $todoLists = match ($request->get('activity_group_id', null)) {
-            null => TodoList::init()->all(),
-            default => TodoList::init()->find(
-                id: (int) $request->get('activity_group_id', 0),
+            null => $todoList->all(),
+            default => $todoList->find(
                 column: 'activity_group_id',
+                value: (int) $request->get('activity_group_id', 0),
             ),
         };
 
-        $response =  new JsonResponse([
+        $response->setData([
             'status' => 'Success',
             'message' => 'OK',
             'data' => $todoLists,
-        ], JsonResponse::HTTP_OK);
+        ]);
+        $response->setStatusCode(JsonResponse::HTTP_OK);
+        $response->prepare($request);
 
-        return $response->prepare($request);
+        return $response;
     }
 
     final public function show(Request $request, int $id): JsonResponse
     {
-        $response =  new JsonResponse([
+        $todoList = new TodoList();
+        $response = new JsonResponse();
+
+        $response->setLastModified($todoList->lastModifiedTime());
+        $response->setPublic();
+
+        if ($response->isNotModified($request)) {
+            return $response;
+        }
+
+        $response->setData([
             'status' => 'Success',
             'message' => 'OK',
-            'data' => TodoList::init()->find($id),
-        ], JsonResponse::HTTP_OK);
+            'data' => $todoList->find($id),
+        ]);
+        $response->setStatusCode(JsonResponse::HTTP_OK);
+        $response->prepare($request);
 
-        return $response->prepare($request);
+        return $response;
     }
 
     final public function store(Request $request): JsonResponse
@@ -48,7 +71,7 @@ final class TodoListController
 
         TodoListValidator::validate()->store($requestTodoList);
 
-        $todoList = TodoList::init();
+        $todoList = new TodoList();
 
         $id = $todoList->create($requestTodoList);
 
