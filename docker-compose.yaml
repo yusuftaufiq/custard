@@ -1,0 +1,29 @@
+version: "3.8"
+services:
+  mariadb:
+    image: mariadb:10.2.41-bionic
+    environment:
+      MARIADB_USER: user 
+      MARIADB_PASSWORD: password 
+      MARIADB_ROOT_PASSWORD: password 
+      MARIADB_DATABASE: todos
+    networks:
+      - todo-app
+  app:
+    image: yt2951/custard:latest
+    depends_on:
+      - mariadb
+    ports:
+      - 8008:3030
+    environment:
+      MYSQL_HOST: mariadb
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
+      MYSQL_DBNAME: todos
+    restart: on-failure
+    networks:
+      - todo-app
+networks:
+  todo-app:
+    name: todo-app
+    driver: bridge

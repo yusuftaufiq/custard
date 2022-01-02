@@ -23,3 +23,6 @@ composer.phar
 
 # Docker file build configuration
 Dockerfile
+
+# Node.js modules
+/node_modules/
