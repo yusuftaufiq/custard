@@ -60,14 +60,14 @@ $routes->add('store an todo list', new Route(
     methods: ['post'],
 ));
 
-$routes->add('update an todo list', new Route(
+$routes->add('update a todo list', new Route(
     path: '/todo-items/{id}',
     defaults: ['_controller' => [TodoListController::class, 'update']],
     requirements: ['id' => '\d+'],
     methods: ['patch'],
 ));
 
-$routes->add('delete an todo list', new Route(
+$routes->add('delete a todo list', new Route(
     path: '/todo-items/{id}',
     defaults: ['_controller' => [TodoListController::class, 'destroy']],
     requirements: ['id' => '\d+'],
