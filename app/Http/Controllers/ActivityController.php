@@ -13,7 +13,7 @@ final class ActivityController
 {
     final public function index(Request $request): JsonResponse
     {
-        $activity = new Activity();
+        $activity = Activity::init();
         $response = new JsonResponse();
 
         $response->setLastModified($activity->lastModifiedTime());
@@ -36,7 +36,7 @@ final class ActivityController
 
     final public function show(Request $request, int $id): JsonResponse
     {
-        $activity = new Activity();
+        $activity = Activity::init();
         $response = new JsonResponse();
 
         $response->setLastModified($activity->lastModifiedTime());
@@ -63,7 +63,7 @@ final class ActivityController
 
         ActivityValidator::validate()->store($requestActivity);
 
-        $activity = new Activity();
+        $activity = Activity::init();
 
         $id = $activity->create($requestActivity);
 

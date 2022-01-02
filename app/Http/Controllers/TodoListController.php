@@ -13,7 +13,7 @@ final class TodoListController
 {
     final public function index(Request $request): JsonResponse
     {
-        $todoList = new TodoList();
+        $todoList = TodoList::init();
         $response = new JsonResponse();
 
         $response->setLastModified($todoList->lastModifiedTime());
@@ -44,7 +44,7 @@ final class TodoListController
 
     final public function show(Request $request, int $id): JsonResponse
     {
-        $todoList = new TodoList();
+        $todoList = TodoList::init();
         $response = new JsonResponse();
 
         $response->setLastModified($todoList->lastModifiedTime());
@@ -71,7 +71,7 @@ final class TodoListController
 
         TodoListValidator::validate()->store($requestTodoList);
 
-        $todoList = new TodoList();
+        $todoList = TodoList::init();
 
         $id = $todoList->create($requestTodoList);
 

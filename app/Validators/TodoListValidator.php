@@ -65,12 +65,7 @@ final class TodoListValidator
                 new Assert\Choice([true, false]),
             ]),
             'priority' => new Assert\Optional([
-                new Assert\Choice([
-                    'very-low',
-                    'low',
-                    'high',
-                    'very-high',
-                ]),
+                new Assert\Choice(TodoList::init()->priority),
             ]),
         ], missingFieldsMessage: '{{ field }} cannot be null');
 
