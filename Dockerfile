@@ -1,42 +1,42 @@
-FROM alpine:3.14
+FROM alpine:3.15
 LABEL Credit="https://github.com/TrafeX/docker-php-nginx"
 
 # Set env
 ENV DB_ADAPTER mysql
 
 # Install packages and remove default server definition
-RUN apk add \
+RUN apk --repository https://dl-cdn.alpinelinux.org/alpine/edge/testing/ add \
   curl \
   nginx \
-  php8 \
-  php8-ctype \
-  php8-curl \
-  php8-dom \
-  php8-fpm \
-  php8-gd \
-  php8-intl \
-  php8-json \
-  php8-mbstring \
-  php8-mysqli \
-  php8-opcache \
-  php8-openssl \
-  php8-phar \
-  php8-session \
-  php8-xml \
-  php8-xmlreader \
-  php8-zlib \
-  php8-pdo_mysql \
+  php81 \
+  php81-ctype \
+  php81-curl \
+  php81-dom \
+  php81-fpm \
+  php81-gd \
+  php81-intl \
+  php81-json \
+  php81-mbstring \
+  php81-mysqli \
+  php81-opcache \
+  php81-openssl \
+  php81-phar \
+  php81-session \
+  php81-xml \
+  php81-xmlreader \
+  php81-zlib \
+  php81-pdo_mysql \
   supervisor
 
 # Create symlink so programs depending on `php` still function
-RUN ln -s /usr/bin/php8 /usr/bin/php
+RUN ln -s /usr/bin/php81 /usr/bin/php
 
 # Configure nginx
 COPY config/nginx.conf /etc/nginx/nginx.conf
 
 # Configure PHP-FPM
-COPY config/fpm-pool.conf /etc/php8/php-fpm.d/www.conf
-COPY config/php.ini /etc/php8/conf.d/custom.ini
+COPY config/fpm-pool.conf /etc/php81/php-fpm.d/www.conf
+COPY config/php.ini /etc/php81/conf.d/custom.ini
 
 # Configure supervisord
 COPY config/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
@@ -70,11 +70,24 @@ RUN composer install --no-dev --optimize-autoloader --no-interaction --no-progre
 # Add application
 COPY --chown=nobody ./ /var/www/html/devcode_todo/
 
+# Remove unused files
+RUN rm -r /var/www/html/devcode_todo/config
+
 # Expose the port nginx is reachable on
 EXPOSE 3030
 
-# Run migration also let supervisord start nginx & php-fpm
-CMD /var/www/html/devcode_todo/vendor/bin/phinx migrate -q && /usr/bin/supervisord -s -c /etc/supervisor/conf.d/supervisord.conf
+# Show system informations
+# printf " ------ CPUINFO ------ \r\n" && cat /proc/cpuinfo &&  \
+#   printf " ------ MEMINFO ------ \r\n" && cat /proc/meminfo && \
+#   printf " ------ NPROC ------ \r\n" && nproc --all && \
+
+# Prevent MySQL TABLE STATUS from cached
+# mysql -u "$MYSQL_USER" -p"$MYSQL_PASSWORD" -h "$MYSQL_HOST" -P 3306 -D "$MYSQL_DBNAME" -e "SET PERSIST information_schema_stats_expiry = 0" && \
+
+# Run migration
+# Let supervisord start nginx & php-fpm
+CMD /var/www/html/devcode_todo/vendor/bin/phinx migrate -q && \
+  /usr/bin/supervisord -s -c /etc/supervisor/conf.d/supervisord.conf
 
 # Configure a healthcheck to validate that everything is up&running
 HEALTHCHECK --timeout=10s CMD curl --silent --fail http://127.0.0.1:8080/fpm-ping
