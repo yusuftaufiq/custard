@@ -1,4 +1,25 @@
-/.git/
+# Composer dependency
+composer.phar
 /vendor/
+
+# PHP Unit Cache
 .phpunit.result.cache
+
+# Visual Studio Code Configs
+.vscode/*
+*.code-workspace
+
+# Local History for Visual Studio Code
+.history/
+
+# PHP Unit Code Coverage Report
+/cov/
+
+# Response Cache
 /cache/
+
+# Git directory
+/.git/
+
+# Docker file build configuration
+Dockerfile
