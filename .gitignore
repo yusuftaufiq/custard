@@ -21,3 +21,6 @@ composer.phar
 
 # Response Cache
 /cache/
+
+# Node.js modules
+/node_modules/
