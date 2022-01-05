@@ -16,20 +16,34 @@ final class ActivityController
         $activity = Activity::init();
         $response = new JsonResponse();
 
-        $response->setLastModified($activity->lastModifiedTime());
-        $response->setPublic();
+        // $response->setPublic();
+        // $response->setMaxAge(3600);
+        // $response->setLastModified($activity->lastModifiedTime());
+        // $response->setPublic();
 
-        if ($response->isNotModified($request)) {
-            return $response;
+        // if ($response->isNotModified($request)) {
+        //     return $response;
+        // }
+
+        $memcached = new \Memcached();
+        $uri = $request->getUri();
+        $memcached->addServer('0.0.0.0', 11211);
+
+        $cached = $memcached->get($uri);
+
+        if ($cached === false) {
+            $activities = $activity->all();
+            $memcached->set($uri, $activities, 3600);
+        } else {
+            $activities = $cached;
         }
 
         $response->setData([
             'status' => 'Success',
             'message' => 'OK',
-            'data' => $activity->all(),
+            'data' => $activities,
         ]);
         $response->setStatusCode(JsonResponse::HTTP_OK);
-        $response->prepare($request);
 
         return $response;
     }
@@ -39,20 +53,34 @@ final class ActivityController
         $activity = Activity::init();
         $response = new JsonResponse();
 
-        $response->setLastModified($activity->lastModifiedTime());
-        $response->setPublic();
+        // $response->setPublic();
+        // $response->setMaxAge(3600);
+        // $response->setLastModified($activity->lastModifiedTime());
+        // $response->setPublic();
 
-        if ($response->isNotModified($request)) {
-            return $response;
+        // if ($response->isNotModified($request)) {
+        //     return $response;
+        // }
+
+        $memcached = new \Memcached();
+        $uri = $request->getUri();
+        $memcached->addServer('0.0.0.0', 11211);
+
+        $cached = $memcached->get($uri);
+
+        if ($cached === false) {
+            $activity = $activity->find($id);
+            $memcached->set($uri, $activity, 3600);
+        } else {
+            $activity = $cached;
         }
 
         $response->setData([
             'status' => 'Success',
             'message' => 'OK',
-            'data' => $activity->find($id),
+            'data' => $activity,
         ]);
         $response->setStatusCode(JsonResponse::HTTP_OK);
-        $response->prepare($request);
 
         return $response;
     }
@@ -73,7 +101,7 @@ final class ActivityController
             'data' => $activity->find($id),
         ], JsonResponse::HTTP_CREATED);
 
-        return $response->prepare($request);
+        return $response;
     }
 
     final public function update(Request $request): JsonResponse
@@ -88,7 +116,7 @@ final class ActivityController
             'data' => Activity::init()->update((int) $request->get('id', 0), $requestActivity),
         ], JsonResponse::HTTP_OK);
 
-        return $response->prepare($request);
+        return $response;
     }
 
     final public function destroy(Request $request): JsonResponse
@@ -101,6 +129,6 @@ final class ActivityController
             'data' => (object) [],
         ], JsonResponse::HTTP_OK);
 
-        return $response->prepare($request);
+        return $response;
     }
 }

@@ -28,6 +28,9 @@ RUN apk --repository https://dl-cdn.alpinelinux.org/alpine/edge/testing/ add \
   php81-pdo_mysql \
   supervisor
 
+  # php81-pecl-memcached \
+  # memcached
+
 # Create symlink so programs depending on `php` still function
 RUN ln -s /usr/bin/php81 /usr/bin/php
 
@@ -86,8 +89,8 @@ EXPOSE 3030
 
 # Run migration
 # Let supervisord start nginx & php-fpm
-CMD /var/www/html/devcode_todo/vendor/bin/phinx migrate -q && \
-  /usr/bin/supervisord -s -c /etc/supervisor/conf.d/supervisord.conf
+CMD /var/www/html/devcode_todo/vendor/bin/phinx migrate && \
+  /usr/bin/supervisord -c /etc/supervisor/conf.d/supervisord.conf
 
 # Configure a healthcheck to validate that everything is up&running
 HEALTHCHECK --timeout=10s CMD curl --silent --fail http://127.0.0.1:8080/fpm-ping

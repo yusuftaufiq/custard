@@ -16,20 +16,33 @@ final class TodoListController
         $todoList = TodoList::init();
         $response = new JsonResponse();
 
-        $response->setLastModified($todoList->lastModifiedTime());
-        $response->setPublic();
+        // $response->setPublic();
+        // $response->setMaxAge(3600);
+        // $response->setLastModified($todoList->lastModifiedTime());
+        // $response->setPublic();
 
-        if ($response->isNotModified($request)) {
-            return $response;
+        // if ($response->isNotModified($request)) {
+        //     return $response;
+        // }
+
+        $memcached = new \Memcached();
+        $uri = $request->getUri();
+        $memcached->addServer('0.0.0.0', 11211);
+
+        $cached = $memcached->get($uri);
+
+        if ($cached === false) {
+            $todoLists = match ($request->get('activity_group_id', null)) {
+                null => $todoList->all(),
+                default => $todoList->find(
+                    column: 'activity_group_id',
+                    value: (int) $request->get('activity_group_id', 0),
+                ),
+            };
+            $memcached->set($uri, $todoLists, 3600);
+        } else {
+            $todoLists = $cached;
         }
-
-        $todoLists = match ($request->get('activity_group_id', null)) {
-            null => $todoList->all(),
-            default => $todoList->find(
-                column: 'activity_group_id',
-                value: (int) $request->get('activity_group_id', 0),
-            ),
-        };
 
         $response->setData([
             'status' => 'Success',
@@ -37,8 +50,7 @@ final class TodoListController
             'data' => $todoLists,
         ]);
         $response->setStatusCode(JsonResponse::HTTP_OK);
-        $response->prepare($request);
-
+        
         return $response;
     }
 
@@ -47,21 +59,35 @@ final class TodoListController
         $todoList = TodoList::init();
         $response = new JsonResponse();
 
-        $response->setLastModified($todoList->lastModifiedTime());
-        $response->setPublic();
+        // $response->setPublic();
+        // $response->setMaxAge(3600);
+        // $response->setLastModified($todoList->lastModifiedTime());
+        // $response->setPublic();
 
-        if ($response->isNotModified($request)) {
-            return $response;
+        // if ($response->isNotModified($request)) {
+        //     return $response;
+        // }
+
+        $memcached = new \Memcached();
+        $uri = $request->getUri();
+        $memcached->addServer('0.0.0.0', 11211);
+
+        $cached = $memcached->get($uri);
+
+        if ($cached === false) {
+            $todoList = $todoList->find($id);
+            $memcached->set($uri, $todoList, 3600);
+        } else {
+            $todoList = $cached;
         }
 
         $response->setData([
             'status' => 'Success',
             'message' => 'OK',
-            'data' => $todoList->find($id),
+            'data' => $todoList,
         ]);
         $response->setStatusCode(JsonResponse::HTTP_OK);
-        $response->prepare($request);
-
+        
         return $response;
     }
 
@@ -84,7 +110,7 @@ final class TodoListController
             'data' => $newTodoList,
         ], JsonResponse::HTTP_CREATED);
 
-        return $response->prepare($request);
+        return $response;
     }
 
     final public function update(Request $request): JsonResponse
@@ -99,7 +125,7 @@ final class TodoListController
             'data' => TodoList::init()->update((int) $request->get('id', 0), $requestTodoList),
         ], JsonResponse::HTTP_OK);
 
-        return $response->prepare($request);
+        return $response;
     }
 
     final public function destroy(Request $request): JsonResponse
@@ -112,6 +138,6 @@ final class TodoListController
             'data' => (object) [],
         ], JsonResponse::HTTP_OK);
 
-        return $response->prepare($request);
+        return $response;
     }
 }
