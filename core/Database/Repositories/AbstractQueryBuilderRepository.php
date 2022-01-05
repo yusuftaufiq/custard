@@ -10,23 +10,20 @@ use Core\Database\Connections\ConnectionInterface;
 use Memcached;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-class QueryBuilderRepository implements RepositoryInterface
+abstract class AbstractQueryBuilderRepository implements RepositoryInterface
 {
-    protected string $table = 'app';
-
     protected bool $softDeletes = false;
 
     protected string $notFoundMessage = 'Resources with id %d not found';
 
     protected ConnectionInterface $connection;
 
-    protected Memcached $memcached;
-
     public function __construct()
     {
         $this->connection = Configuration::connect();
-        $this->memcached = new Memcached();
     }
+
+    abstract public function getTableName(): string;
 
     public function all(): array
     {
@@ -34,10 +31,10 @@ class QueryBuilderRepository implements RepositoryInterface
 
         return $query
             ->select('*')
-            ->from($this->table)
-            // ->where(fn (QueryExpression $expression) => (
-            //     $this->softDeletes ? $expression->isNull('deleted_at') : []
-            // ))
+            ->from($this->getTableName())
+            ->where(fn (QueryExpression $expression) => (
+                $this->softDeletes ? $expression->isNull('deleted_at') : []
+            ))
             ->execute()
             ->fetchAll(\PDO::FETCH_OBJ) ?: [];
     }
@@ -48,10 +45,10 @@ class QueryBuilderRepository implements RepositoryInterface
 
         return (int) $query
             ->select(['count' => $query->func()->count('*')])
-            ->from($this->table)
-            // ->where(fn (QueryExpression $expression) => (
-            //     $this->softDeletes ? $expression->isNull('deleted_at') : []
-            // ))
+            ->from($this->getTableName())
+            ->where(fn (QueryExpression $expression) => (
+                $this->softDeletes ? $expression->isNull('deleted_at') : []
+            ))
             ->andWhere([$column => $value])
             ->execute()
             ->fetch(\PDO::FETCH_OBJ)
@@ -64,10 +61,10 @@ class QueryBuilderRepository implements RepositoryInterface
 
         return $query
             ->select('*')
-            ->from($this->table)
-            // ->where(fn (QueryExpression $expression) => (
-            //     $this->softDeletes ? $expression->isNull('deleted_at') : []
-            // ))
+            ->from($this->getTableName())
+            ->where(fn (QueryExpression $expression) => (
+                $this->softDeletes ? $expression->isNull('deleted_at') : []
+            ))
             ->order($query->func()->rand())
             ->execute()
             ->fetch(\PDO::FETCH_OBJ) ?: null;
@@ -79,10 +76,10 @@ class QueryBuilderRepository implements RepositoryInterface
 
         $data = $query
             ->select('*')
-            ->from($this->table)
-            // ->where(fn (QueryExpression $expression) => (
-            //     $this->softDeletes ? $expression->isNull('deleted_at') : []
-            // ))
+            ->from($this->getTableName())
+            ->where(fn (QueryExpression $expression) => (
+                $this->softDeletes ? $expression->isNull('deleted_at') : []
+            ))
             ->andWhere([$column => $value])
             ->execute()
             ->fetch(\PDO::FETCH_OBJ);
@@ -97,7 +94,7 @@ class QueryBuilderRepository implements RepositoryInterface
     public function create(array $values): int
     {
         return (int) $this->connection->getConnection()
-            ->insert($this->table, $values)
+            ->insert($this->getTableName(), $values)
             ->lastInsertId();
     }
 
@@ -107,7 +104,7 @@ class QueryBuilderRepository implements RepositoryInterface
             throw new NotFoundHttpException(sprintf($this->notFoundMessage, $id));
         }
 
-        $this->connection->getConnection()->update($this->table, $values, ['id' => $id]);
+        $this->connection->getConnection()->update($this->getTableName(), $values, ['id' => $id]);
 
         return $this->find($id);
     }
@@ -120,18 +117,18 @@ class QueryBuilderRepository implements RepositoryInterface
 
         switch ($this->softDeletes) {
             case true:
-                $this->connection->getConnection()->update($this->table, [
+                $this->connection->getConnection()->update($this->getTableName(), [
                     'deleted_at' => $this->connection->getQuery()->func()->now(),
                 ], [$column => $value]);
                 break;
             default:
-                $this->connection->getConnection()->delete($this->table, [$column => $value]);
+                $this->connection->getConnection()->delete($this->getTableName(), [$column => $value]);
                 break;
         }
     }
 
     public function lastModifiedTime(): \DateTime
     {
-        return $this->connection->getLastModifiedTime($this->table);
+        return $this->connection->getLastModifiedTime($this->getTableName());
     }
 }
