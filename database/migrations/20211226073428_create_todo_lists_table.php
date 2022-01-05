@@ -19,7 +19,7 @@ final class CreateTodoListsTable extends AbstractMigration
      */
     final public function change(): void
     {
-        $this->table('todos', ['engine' => 'MyISAM'])
+        $this->table('todos')
             ->addColumn('activity_group_id', 'integer')
             ->addForeignKey('activity_group_id', 'activities', 'id', [
                 'delete' => 'CASCADE',
@@ -42,16 +42,16 @@ final class CreateTodoListsTable extends AbstractMigration
                     'very-high',
                 ],
             ])
-            ->addColumn('created_at', 'timestamp', [
-                'default' => 'CURRENT_TIMESTAMP',
-            ])
-            ->addColumn('updated_at', 'timestamp', [
-                'default' => 'CURRENT_TIMESTAMP',
-                'update' => 'CURRENT_TIMESTAMP',
-            ])
-            ->addColumn('deleted_at', 'timestamp', [
-                'null' => true,
-            ])
+            // ->addColumn('created_at', 'timestamp', [
+            //     'default' => 'CURRENT_TIMESTAMP',
+            // ])
+            // ->addColumn('updated_at', 'timestamp', [
+            //     'default' => 'CURRENT_TIMESTAMP',
+            //     'update' => 'CURRENT_TIMESTAMP',
+            // ])
+            // ->addColumn('deleted_at', 'timestamp', [
+            //     'null' => true,
+            // ])
             ->create();
     }
 }
