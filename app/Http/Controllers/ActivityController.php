@@ -66,7 +66,7 @@ final class ActivityController
         $response =  new JsonResponse([
             'status' => 'Success',
             'message' => 'Created',
-            'data' => $activity->find($id),
+            'data' => ['email' => null] + $requestActivity + ['id' => $id],
         ], JsonResponse::HTTP_CREATED);
 
         return $response;

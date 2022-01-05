@@ -69,8 +69,8 @@ final class TodoListController
 
         $id = $todoList->create($requestTodoList);
 
-        $newTodoList = $todoList->find($id);
-        $newTodoList->is_active = (bool) $newTodoList->is_active;
+        $newTodoList = ['is_active' => 1, 'priority' => 'very-high'] + $requestTodoList + ['id' => $id];
+        $newTodoList['is_active'] = (bool) $newTodoList['is_active'];
 
         $response =  new JsonResponse([
             'status' => 'Success',
