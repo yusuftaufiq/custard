@@ -19,10 +19,10 @@ final class MysqlConnection implements ConnectionInterface
     final public function __construct()
     {
         $this->configuration = [
-            'host' => getenv('MYSQL_HOST'),
-            'database' => getenv('MYSQL_DBNAME'),
-            'username' => getenv('MYSQL_USER'),
-            'password' => getenv('MYSQL_PASSWORD'),
+            'host' => getenv('MYSQL_HOST') ?: 'localhost',
+            'database' => getenv('MYSQL_DBNAME') ?: getcwd(),
+            'username' => getenv('MYSQL_USER') ?: 'root',
+            'password' => getenv('MYSQL_PASSWORD') ?: '',
         ];
 
         $this->driver = new Driver\Mysql($this->configuration);
