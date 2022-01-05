@@ -6,6 +6,7 @@ namespace App\Http\Controllers;
 
 use App\Models\TodoList;
 use App\Validators\TodoListValidator;
+use Core\Cache\Memcached;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
@@ -13,25 +14,9 @@ final class TodoListController
 {
     final public function index(Request $request): JsonResponse
     {
-        $todoList = TodoList::init();
-        $response = new JsonResponse();
-
-        // $response->setPublic();
-        // $response->setMaxAge(3600);
-        // $response->setLastModified($todoList->lastModifiedTime());
-        // $response->setPublic();
-
-        // if ($response->isNotModified($request)) {
-        //     return $response;
-        // }
-
-        $memcached = new \Memcached();
-        $uri = $request->getUri();
-        $memcached->addServer('0.0.0.0', 11211);
-
-        $cached = $memcached->get($uri);
-
-        if ($cached === false) {
+        $memcached = new Memcached();
+        $result = $memcached->cache("{$request->getMethod()}:{$request->getUri()}", function () use ($request) {
+            $todoList = TodoList::init();
             $todoLists = match ($request->get('activity_group_id', null)) {
                 null => $todoList->all(),
                 default => $todoList->find(
@@ -39,55 +24,38 @@ final class TodoListController
                     value: (int) $request->get('activity_group_id', 0),
                 ),
             };
-            $memcached->set($uri, $todoLists, 3600);
-        } else {
-            $todoLists = $cached;
-        }
 
-        $response->setData([
-            'status' => 'Success',
-            'message' => 'OK',
-            'data' => $todoLists,
-        ]);
+            return json_encode([
+                'status' => 'Success',
+                'message' => 'OK',
+                'data' => $todoLists,
+            ]);
+        });
+
+        $response = new JsonResponse();
+        $response->setJson($result);
         $response->setStatusCode(JsonResponse::HTTP_OK);
-        
+
         return $response;
     }
 
     final public function show(Request $request, int $id): JsonResponse
     {
-        $todoList = TodoList::init();
+        $memcached = new Memcached();
+        $result = $memcached->cache("{$request->getMethod()}:{$request->getUri()}", function () use ($id) {
+            $todoList = TodoList::init();
+
+            return json_encode([
+                'status' => 'Success',
+                'message' => 'OK',
+                'data' => $todoList->find($id),
+            ]);
+        });
+
         $response = new JsonResponse();
-
-        // $response->setPublic();
-        // $response->setMaxAge(3600);
-        // $response->setLastModified($todoList->lastModifiedTime());
-        // $response->setPublic();
-
-        // if ($response->isNotModified($request)) {
-        //     return $response;
-        // }
-
-        $memcached = new \Memcached();
-        $uri = $request->getUri();
-        $memcached->addServer('0.0.0.0', 11211);
-
-        $cached = $memcached->get($uri);
-
-        if ($cached === false) {
-            $todoList = $todoList->find($id);
-            $memcached->set($uri, $todoList, 3600);
-        } else {
-            $todoList = $cached;
-        }
-
-        $response->setData([
-            'status' => 'Success',
-            'message' => 'OK',
-            'data' => $todoList,
-        ]);
+        $response->setJson($result);
         $response->setStatusCode(JsonResponse::HTTP_OK);
-        
+
         return $response;
     }
 
