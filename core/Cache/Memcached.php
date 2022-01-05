@@ -13,8 +13,8 @@ class Memcached implements CacheInterface
     public function __construct()
     {
         $this->configuration = [
-            'host' => getenv('REDIS_HOST') ?: 'localhost',
-            'port' => getenv('REDIS_PORT') ?: 11211,
+            'host' => getenv('MEMCACHED_HOST') ?: 'localhost',
+            'port' => getenv('MEMCACHED_PORT') ?: 11211,
         ];
 
         $this->memcached = new \Memcached();
