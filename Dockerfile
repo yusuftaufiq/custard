@@ -26,10 +26,9 @@ RUN apk --repository https://dl-cdn.alpinelinux.org/alpine/edge/testing/ add \
   php81-xmlreader \
   php81-zlib \
   php81-pdo_mysql \
-  supervisor
-
-  # php81-pecl-memcached \
-  # memcached
+  supervisor \
+  php81-pecl-memcached \
+  memcached
 
 # Create symlink so programs depending on `php` still function
 RUN ln -s /usr/bin/php81 /usr/bin/php
