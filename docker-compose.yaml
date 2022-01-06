@@ -10,11 +10,11 @@ services:
     networks:
       - todo-app
   app:
-    image: yt2951/custard:latest
+    build: .
     depends_on:
       - mariadb
     ports:
-      - 8008:3030
+      - 8090:3030
     environment:
       MYSQL_HOST: mariadb
       MYSQL_USER: user
