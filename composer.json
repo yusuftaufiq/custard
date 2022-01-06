@@ -33,6 +33,7 @@
         "symfony/event-dispatcher": "^5.3",
         "robmorgan/phinx": "^0.12.9",
         "symfony/yaml": "^6.0",
-        "symfony/validator": "^6.0"
+        "symfony/validator": "^6.0",
+        "darkghosthunter/preloader": "^2.2"
     }
 }

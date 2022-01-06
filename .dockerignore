@@ -1,5 +1,6 @@
 # Composer dependency
 composer.phar
+composer.lock
 /vendor/
 
 # PHP Unit Cache

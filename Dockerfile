@@ -28,7 +28,10 @@ RUN apk --repository https://dl-cdn.alpinelinux.org/alpine/edge/testing/ add \
   php81-pdo_mysql \
   supervisor \
   php81-pecl-memcached \
-  memcached
+  memcached \
+  php81-xmlwriter \
+  php81-simplexml \
+  php81-tokenizer
 
 # Create symlink so programs depending on `php` still function
 RUN ln -s /usr/bin/php81 /usr/bin/php
@@ -66,14 +69,11 @@ WORKDIR /var/www/html/devcode_todo
 COPY --from=composer /usr/bin/composer /usr/bin/composer
 
 # Install composer dependencies
-COPY composer.json composer.lock ./
+COPY composer.json ./
 RUN composer install --no-dev --optimize-autoloader --no-interaction --no-progress
 
 # Add application
 COPY --chown=nobody ./ /var/www/html/devcode_todo/
-
-# Remove unused files
-RUN rm -r /var/www/html/devcode_todo/config
 
 # Expose the port nginx is reachable on
 EXPOSE 3030
