@@ -39,10 +39,6 @@ RUN ln -s /usr/bin/php81 /usr/bin/php
 # Configure nginx
 COPY config/nginx.conf /etc/nginx/nginx.conf
 
-# Configure PHP-FPM
-COPY config/fpm-pool.conf /etc/php81/php-fpm.d/www.conf
-COPY config/php.ini /etc/php81/conf.d/custom.ini
-
 # Configure supervisord
 COPY config/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
@@ -71,6 +67,10 @@ COPY --from=composer /usr/bin/composer /usr/bin/composer
 # Install composer dependencies
 COPY composer.json ./
 RUN composer install --no-dev --optimize-autoloader --no-interaction --no-progress
+
+# Configure PHP-FPM
+COPY config/fpm-pool.conf /etc/php81/php-fpm.d/www.conf
+COPY config/php.ini /etc/php81/conf.d/custom.ini
 
 # Add application
 COPY --chown=nobody ./ /var/www/html/devcode_todo/
