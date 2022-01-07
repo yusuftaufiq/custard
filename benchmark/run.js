@@ -1,11 +1,12 @@
 const autocannon = require('autocannon');
-const prettyBytes = require('pretty-bytes')
+const fetch = require('node-fetch');
+const prettyBytes = require('pretty-bytes');
 
 const API_URL = 'http://localhost:8090';
 const WORKER_THREADS = 1;
 const CONCURRENT_CONNECTIONS = 10;
-const NUMBER_OF_REQUESTS = 10000;
-const CONNECTION_TIMEOUT_IN_MILLISECOND = 1000000;
+const NUMBER_OF_REQUESTS = 1000;
+const CONNECTION_TIMEOUT_IN_MILLISECOND = 1000;
 
 const CONFIGS = {
   url: API_URL,
@@ -16,54 +17,47 @@ const CONFIGS = {
 };
 
 (async () => {
-  const insertActivity = await autocannon({
-    ...CONFIGS,
-    amount: 2,
-    connections: 2,
-    requests: [{
-      method: 'POST',
-      path: '/activity-groups',
-      headers: {
-        'Content-type': 'application/json;'
-      },
-      body: JSON.stringify({
-        title: 'Task-[<id>]',
-      })
-    }],
-    idReplacement: true,
-  });
+  const { data: { id: activityId } } = await fetch(`${API_URL}/activity-groups`, {
+    method: 'POST',
+    headers: {
+      'Content-type': 'application/json'
+    },
+    body: JSON.stringify({
+      title: 'Benchmark',
+    })
+  }).then((response) => response.json());
 
-  // autocannon --timeout 1000000 --connections 10 --amount 10000 --workers 1 --method POST --body '{"title": "Hello", "activity_group_id": 2}'  http://localhost:8090/todo-items
+  // autocannon --timeout 20000 --connections 10 --amount 3000 --workers 1 --method POST --body '{"title": "Hello", "activity_group_id": 2}'  http://localhost:8090/todo-items
   const insertTodoList = await autocannon({
     ...CONFIGS,
     requests: [{
       method: 'POST',
       path: '/todo-items',
       headers: {
-        'Content-type': 'application/json;'
+        'Content-type': 'application/json',
       },
       body: JSON.stringify({
-        activity_group_id: 2,
+        activity_group_id: activityId,
         title: 'Task-[<id>]',
       })
     }],
     idReplacement: true,
   });
 
-  // autocannon --timeout 1000000 --connections 10 --amount 10000 --workers 1 --method GET http://localhost:8090/todo-items?activity_group_id=2
+  // autocannon --timeout 20000 --connections 10 --amount 3000 --workers 1 --method GET http://localhost:8090/todo-items?activity_group_id=2
   const showTodoLists = await autocannon({
     ...CONFIGS,
     requests: [{
       method: 'GET',
-      path: '/todo-items?activity_group_id=2',
+      path: `/todo-items?activity_group_id=${activityId}`,
       headers: {
-        'Content-type': 'application/json;'
+        'Content-type': 'application/json',
       },
     }],
   });
 
   const benchmarksResult = [insertTodoList, showTodoLists].reduce((result, value) => ({
-    failed: (result.failed + value.non2xx) / 2,
+    failed: result.failed + value.non2xx,
     latencyAverage: (result.latencyAverage + value.latency.average) / 2,
     requestsAverage: (result.requestsAverage + value.requests.average) / 2,
     throughputAverage: (result.throughputAverage + value.throughput.average) / 2,
