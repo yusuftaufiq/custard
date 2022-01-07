@@ -14,6 +14,15 @@ final class ActivityController
     final public function index(Request $request): JsonResponse
     {
         $activity = Activity::init();
+        $response = new JsonResponse();
+
+        $response->setLastModified($activity->lastModifiedTime());
+        $response->setPublic();
+
+        if ($response->isNotModified($request)) {
+            return $response;
+        }
+
         $activities = $activity->all();
 
         $result = json_encode([
@@ -22,7 +31,6 @@ final class ActivityController
             'data' => $activities,
         ]);
 
-        $response = new JsonResponse();
         $response->setJson($result);
         $response->setStatusCode(JsonResponse::HTTP_OK);
 
@@ -32,6 +40,14 @@ final class ActivityController
     final public function show(Request $request, int $id): JsonResponse
     {
         $activity = Activity::init();
+        $response = new JsonResponse();
+
+        $response->setLastModified($activity->lastModifiedTime());
+        $response->setPublic();
+
+        if ($response->isNotModified($request)) {
+            return $response;
+        }
 
         $result = json_encode([
             'status' => 'Success',
@@ -39,7 +55,6 @@ final class ActivityController
             'data' => $activity->find($id),
         ]);
 
-        $response = new JsonResponse();
         $response->setJson($result);
         $response->setStatusCode(JsonResponse::HTTP_OK);
 

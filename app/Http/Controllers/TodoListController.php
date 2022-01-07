@@ -14,6 +14,15 @@ final class TodoListController
     final public function index(Request $request): JsonResponse
     {
         $todoList = TodoList::init();
+        $response = new JsonResponse();
+
+        $response->setLastModified($todoList->lastModifiedTime());
+        $response->setPublic();
+
+        if ($response->isNotModified($request)) {
+            return $response;
+        }
+
         $todoLists = match ($request->get('activity_group_id', null)) {
             null => $todoList->all(),
             default => $todoList->find(
@@ -28,7 +37,6 @@ final class TodoListController
             'data' => $todoLists,
         ]);
 
-        $response = new JsonResponse();
         $response->setJson($result);
         $response->setStatusCode(JsonResponse::HTTP_OK);
 
@@ -38,6 +46,14 @@ final class TodoListController
     final public function show(Request $request, int $id): JsonResponse
     {
         $todoList = TodoList::init();
+        $response = new JsonResponse();
+
+        $response->setLastModified($todoList->lastModifiedTime());
+        $response->setPublic();
+
+        if ($response->isNotModified($request)) {
+            return $response;
+        }
 
         $result = json_encode([
             'status' => 'Success',
@@ -45,7 +61,6 @@ final class TodoListController
             'data' => $todoList->find($id),
         ]);
 
-        $response = new JsonResponse();
         $response->setJson($result);
         $response->setStatusCode(JsonResponse::HTTP_OK);
 
