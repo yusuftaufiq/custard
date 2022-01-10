@@ -1,8 +1,13 @@
 const autocannon = require('autocannon');
 const fetch = require('node-fetch');
 const prettyBytes = require('pretty-bytes');
+const { Command } = require('commander');
 
-const API_URL = 'http://localhost:8090';
+const program = new Command();
+program.option('-u, --url <API URL>', 'API URL to run benchmark');
+program.parse(process.argv);
+
+const API_URL = program.opts().url ?? 'http://localhost:8090';
 const WORKER_THREADS = 1;
 const CONCURRENT_CONNECTIONS = 10;
 const NUMBER_OF_REQUESTS = 1000;
@@ -17,6 +22,8 @@ const CONFIGS = {
 };
 
 (async () => {
+  console.log(`Running benchmarks on ${API_URL}\n\r`);
+
   const { data: { id: activityId } } = await fetch(`${API_URL}/activity-groups`, {
     method: 'POST',
     headers: {
