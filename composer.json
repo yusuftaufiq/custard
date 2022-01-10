@@ -24,7 +24,8 @@
         "phpunit/phpunit": "^9.5",
         "symfony/var-dumper": "^5.3",
         "fakerphp/faker": "^1.17",
-        "vimeo/psalm": "^4.16"
+        "vimeo/psalm": "^4.16",
+        "darkghosthunter/preloader": "^2.2"
     },
     "require": {
         "symfony/http-foundation": "^5.3",
@@ -33,7 +34,6 @@
         "symfony/event-dispatcher": "^5.3",
         "robmorgan/phinx": "^0.12.9",
         "symfony/yaml": "^6.0",
-        "symfony/validator": "^6.0",
-        "darkghosthunter/preloader": "^2.2"
+        "symfony/validator": "^6.0"
     }
 }

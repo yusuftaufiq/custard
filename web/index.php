@@ -3,7 +3,6 @@
 require_once __DIR__ . '/../vendor/autoload.php';
 
 use Core\Framework;
-// use DarkGhostHunter\Preloader\Preloader;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\HttpCache\{HttpCache, Store};
 
@@ -16,5 +15,3 @@ $framework = new HttpCache(
 );
 
 $framework->handle($request)->send();
-
-// Preloader::make()->writeTo(__DIR__ . '/../config/preloader.php');
